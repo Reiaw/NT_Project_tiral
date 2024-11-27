@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>ฟอร์ม</title>
+{% endblock %}
+
+{% block content %}
+    <h2 class="text-center">เพิ่มสมาชิก</h2>
+    <form method="post" action="form">
+        {% csrf_token%}
+        <div clas="form-group">
+            <label for="name">ชื่อประชากร</label>
+            <input type="text" name="name" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+            <label for="age">อายุ</label>
+            <input type="number" name="age" class="form-control">
+        </div>
+        <input type="submit" value="บันทึก" class="btn btn-success">
+    </form>
+{% endblock %}
