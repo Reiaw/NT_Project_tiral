@@ -45,6 +45,8 @@ try {
     $billUpdatedCount = 0;
     $serviceSuccessCount = 0;
     $serviceUpdatedCount = 0;
+    $gadgetSuccessCount = 0;
+    $gadgetUpdatedCount = 0;
     $errors = [];
     
     // เริ่มทำ transaction
@@ -218,6 +220,71 @@ try {
                     }
                 }
             }
+            
+            // อ่าน Sheet ของ Gadget (ถ้ามี)
+            $gadgetSheet = $spreadsheet->getSheetByName('Gedget');
+            if ($gadgetSheet) {
+                $gadgetRows = $gadgetSheet->toArray();
+                
+                // ตรวจสอบหัวคอลัมน์สำหรับ Gadget
+                $gadgetHeader = array_shift($gadgetRows);
+                $expectedGadgetHeader = ['Number', 'Name Device', 'Start', 'Detail'];
+                
+                if ($gadgetHeader !== $expectedGadgetHeader) {
+                    throw new Exception('รูปแบบ Sheet "Gedget" ไม่ถูกต้อง');
+                }
+                
+                foreach ($gadgetRows as $rowIndex => $row) {
+                    // ข้ามแถวที่ว่าง
+                    if (empty($row[0])) {
+                        continue;
+                    }
+                    
+                    $bill_number = trim($row[0]);
+                    $name_gadget = trim($row[1]);
+                    $create_at = trim($row[2]);
+                    $note = isset($row[3]) ? trim($row[3]) : null;
+                    
+                    // ตรวจสอบว่ามีหมายเลขบิลใน billMap หรือไม่
+                    if (!isset($billMap[$bill_number])) {
+                        $errors[] = "ไม่พบหมายเลขบิล $bill_number สำหรับอุปกรณ์ $name_gadget";
+                        continue;
+                    }
+                    
+                    $id_bill = $billMap[$bill_number];
+                    
+                    // ตรวจสอบรูปแบบวันที่
+                    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $create_at)) {
+                        $create_at = date('Y-m-d', strtotime($create_at));
+                    }
+                    
+                    // ตรวจสอบว่าอุปกรณ์ซ้ำหรือไม่ (ตรวจสอบจาก name_gadget และ id_bill)
+                    $checkDuplicate = "SELECT id_gedget FROM gedget WHERE name_gedget = ? AND id_bill = ?";
+                    $stmt = $conn->prepare($checkDuplicate);
+                    $stmt->bind_param("si", $name_gadget, $id_bill);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    
+                    if ($result->num_rows > 0) {
+                        // หากมีอยู่แล้ว ให้อัปเดตข้อมูล
+                        $updateGadget = "UPDATE gedget SET create_at = ?, note = ? WHERE name_gedget = ? AND id_bill = ?";
+                        $stmt = $conn->prepare($updateGadget);
+                        $stmt->bind_param("sssi", $create_at, $note, $name_gadget, $id_bill);
+                        if ($stmt->execute()) {
+                            $gadgetUpdatedCount++;
+                        }
+                    } else {
+                        // เพิ่มข้อมูลอุปกรณ์ใหม่
+                        $insertGadget = "INSERT INTO gedget (name_gedget, id_bill, create_at, note) 
+                            VALUES (?, ?, ?, ?)";
+                        $stmt = $conn->prepare($insertGadget);
+                        $stmt->bind_param("siss", $name_gadget, $id_bill, $create_at, $note);
+                        if ($stmt->execute()) {
+                            $gadgetSuccessCount++;
+                        }
+                    }
+                }
+            }
         } else {
             throw new Exception('ไม่พบ Sheet "Bills" ในไฟล์ Excel');
         }
@@ -228,6 +295,9 @@ try {
         $message = "นำเข้าข้อมูลบิลสำเร็จ $billSuccessCount รายการ, อัปเดตข้อมูลบิลสำเร็จ $billUpdatedCount รายการ";
         if ($serviceSuccessCount > 0 || $serviceUpdatedCount > 0) {
             $message .= ", นำเข้าข้อมูลบริการสำเร็จ $serviceSuccessCount รายการ, อัปเดตข้อมูลบริการสำเร็จ $serviceUpdatedCount รายการ";
+        }
+        if ($gadgetSuccessCount > 0 || $gadgetUpdatedCount > 0) {
+            $message .= ", นำเข้าข้อมูลอุปกรณ์สำเร็จ $gadgetSuccessCount รายการ, อัปเดตข้อมูลอุปกรณ์สำเร็จ $gadgetUpdatedCount รายการ";
         }
         
         echo json_encode([
