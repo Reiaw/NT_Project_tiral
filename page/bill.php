@@ -194,10 +194,12 @@ $bills = $result->fetch_all(MYSQLI_ASSOC);
                     <!-- ตัวค้นหาและตัวกรอง -->
                     <div class="flex items-center">
                         <!-- เพิ่มช่องค้นหาชื่อลูกค้า -->
+                        <?php if ($id_customer == 0): ?>
                         <div class="relative">
                             <input type="text" id="searchCustomerName" placeholder="ค้นหาชื่อลูกค้า..." class="border p-2 rounded-md pl-10 mr-2">
                             <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                         </div>
+                        <?php endif; ?>
                         <div class="relative">
                             <input type="text" id="searchNumberBill" placeholder="ค้นหาเลขบิล" class="border p-2 rounded-md pl-10 mr-2">
                             <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>

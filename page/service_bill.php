@@ -104,7 +104,6 @@ if ($id_bill > 0  ) {
                      <div>
                         <button onclick="openModal('service')" class="bg-blue-500 text-white px-4 py-2 rounded-md">เพิ่มบริการ</button>
                         <form action="bill.php"  method="POST" style="display: inline;">
-                            <input type="hidden" name="id_bill" value="<?php echo $id_bill; ?>">
                             <input type="hidden" name="id_customer" value="<?php echo $id_customer; ?>">
                             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">กลับ</button>
                         </form>
