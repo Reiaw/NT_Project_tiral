@@ -8,6 +8,7 @@ if (!isset($_SESSION['email'])) {
 require_once '../config/config.php';
 require_once '../function/functions.php';
 
+$id_customer = isset($_POST['id_customer']) ? intval($_POST['id_customer']) : 0;
 $id_service = isset($_POST['id_service']) ? intval($_POST['id_service']) : 0;
 $id_bill = isset($_POST['id_bill']) ? intval($_POST['id_bill']) : 0;
 
@@ -93,6 +94,7 @@ if ($id_service > 0) {
             </button>   
             <form action="service_bill.php" method="POST" style="display: inline;">
                 <input type="hidden" name="id_bill" value="<?php echo $id_bill; ?>">
+                <input type="hidden" name="id_customer" value="<?php echo $id_customer; ?>">
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">
                     กลับ
                 </button>

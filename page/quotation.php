@@ -8,6 +8,7 @@ if (!isset($_SESSION['email'])) {
 require_once '../config/config.php';
 require_once '../function/functions.php';
 
+
 $groupNames = ['ค่าอุปกรณ์ Solution ใหม่', 'ค่าอุปกรณ์ทดแทน Solution เดิม', 'ค่าอุปกรณ์ Solution เดิม', 'ต้นทุนการดำเนินการ'];
 $sql = "SELECT id_customer, name_customer FROM customers";
 $result = $conn->query($sql);
@@ -32,6 +33,12 @@ if ($result->num_rows > 0) {
 </head>
 <body class="bg-gray-100">
     <?php include './components/navbar.php'; ?>
+    <?php include './components/quotation_manual.php'; ?>
+    <!-- ปุ่มเปิดคู่มือ -->
+    <button id="manualButton" class="fixed right-4 top-20 bg-blue-500 text-white px-3 py-2 rounded-md z-50 flex items-center group transition-all duration-300 w-10 hover:w-24 overflow-hidden">
+        <i class="fas fa-question-circle text-xl"></i>
+        <span class="ml-2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">คู่มือ</span>
+    </button>
     <div class="container mx-auto p-4">
         <!-- Tab Buttons -->
         <div class="flex mb-4">
@@ -454,7 +461,7 @@ if ($result->num_rows > 0) {
                         </tr>
                     </thead>
                     <tbody>
-               
+                            
                     </tbody>
                 </table>
                 <button onclick="addServiceRow('installation-rentals')" 
@@ -469,6 +476,52 @@ if ($result->num_rows > 0) {
         </div>
     </div>
     <script>
+        // ฟังก์ชันเปิด modal สำหรับคู่มือ
+        function openManual() {
+            document.getElementById('manualModal').classList.remove('hidden');
+            currentPage = 0;
+            showPage(currentPage);
+        }
+
+        // ฟังก์ชันปิด modal สำหรับคู่มือ
+        function closeModal() {
+            document.getElementById('manualModal').classList.add('hidden');
+        }
+
+        // ฟังก์ชันแสดงหน้าที่เลือกในคู่มือ
+        let currentPage = 0;
+
+        function showPage(page) {
+            const pages = document.querySelectorAll('.manual-page');
+            pages.forEach((pageElem, index) => {
+                pageElem.classList.add('hidden'); // ซ่อนทุกหน้า
+                if (index === page) {
+                    pageElem.classList.remove('hidden'); // แสดงหน้า
+                }
+            });
+            // อัปเดตเลขหน้า
+            document.getElementById('pageNumber').textContent = `${page + 1} / ${pages.length}`;
+        }
+
+        // ฟังก์ชันสำหรับหน้าถัดไป
+        function nextPage() {
+            const pages = document.querySelectorAll('.manual-page');
+            if (currentPage < pages.length - 1) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        }
+
+        // ฟังก์ชันสำหรับหน้าก่อนหน้า
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        }
+
+        // เพิ่มการเปิด modal คู่มือเมื่อคลิกปุ่ม
+        document.getElementById('manualButton').addEventListener('click', openManual);
         const vatSelect = document.getElementById("vat-rate");
         // สร้างตัวเลือก VAT ตั้งแต่ 0% ถึง 100%
         for (let i = 0; i <= 100; i++) {

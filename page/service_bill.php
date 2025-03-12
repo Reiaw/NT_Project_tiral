@@ -167,6 +167,7 @@ if ($id_bill > 0  ) {
                                     <button onclick="openModal('service', <?php echo $service['id_service']; ?>)" class="bg-yellow-500 text-white px-2 py-1 rounded"> <i class="fas fa-edit"></i></button>
                                     <button onclick="deleteItem('service', <?php echo $service['id_service']; ?>)" class="bg-red-500 text-white px-2 py-1 rounded"><i class="fas fa-trash"></i></button>
                                     <form action="service_detail.php" method="POST" style="display: inline;">
+                                        <input type="hidden" name="id_customer" value="<?php echo $id_customer; ?>">
                                         <input type="hidden" name="id_service" value="<?php echo $service['id_service']; ?>">
                                         <input type="hidden" name="id_bill" value="<?php echo $bill['id_bill']; ?>"> <!-- เพิ่มส่วนนี้ -->
                                         <button type="submit" class="bg-blue-500 text-white px-2 py-1 rounded-md"> 

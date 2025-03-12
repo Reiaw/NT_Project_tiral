@@ -45,18 +45,20 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="assigned_users">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">
                         มอบหมายให้
                     </label>
-                    <select name="assigned_users[]" id="assigned_users" multiple required
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <div class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
                         <?php
                         $users = getAllUsers();
                         foreach ($users as $user) {
-                            echo "<option value='" . $user['id'] . "'>" . htmlspecialchars($user['name']) . "</option>";
+                            echo "<label class='flex items-center space-x-2'>";
+                            echo "<input type='checkbox' name='assigned_users[]' value='" . $user['id'] . "' class='form-checkbox'>";
+                            echo "<span>" . htmlspecialchars($user['name']) . "</span>";
+                            echo "</label>";
                         }
                         ?>
-                    </select>
+                    </div>
                 </div>
 
                 <div class="flex justify-end mt-4">

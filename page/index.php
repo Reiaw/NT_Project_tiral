@@ -37,7 +37,7 @@ if ($result_near_expiry->num_rows > 0) {
 // Get tasks for the logged-in user
 $user_id = $_SESSION['user_id']; // Assuming you store user_id in session
 $task_sql = "
-    SELECT t.*, tg.user_id 
+    SELECT DISTINCT t.* 
     FROM task t
     JOIN task_group tg ON t.id_task = tg.task_id
     WHERE tg.user_id = ?
@@ -68,6 +68,7 @@ if (isset($_POST['task_id'])) {
         $task = $task_result->fetch_assoc();
     }
 }
+$limit = 3;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -132,7 +133,12 @@ if (isset($_POST['task_id'])) {
 <body class="bg-gray-100">
     <!-- Navbar -->
     <?php include './components/navbar.php'; ?>
-    
+    <?php include './components/index_manual.php'; ?>
+    <!-- ปุ่มเปิดคู่มือ -->
+    <button id="manualButton" class="fixed right-4 top-20 bg-blue-500 text-white px-3 py-2 rounded-md z-50 flex items-center group transition-all duration-300 w-10 hover:w-24 overflow-hidden">
+        <i class="fas fa-question-circle text-xl"></i>
+        <span class="ml-2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">คู่มือ</span>
+    </button>
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8 main-content">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -174,8 +180,8 @@ if (isset($_POST['task_id'])) {
                     </div>
                     <div class="space-y-4">
                         <?php if (!empty($tasks)): ?>
-                            <?php $taskCount = count($tasks); $page = $_GET['task_page'] ?? 1; $limit = 3; ?>
-                            <?php $tasksToShow = array_slice($tasks, ($page - 1) * $limit, $limit); ?>
+                            <?php $page = $_GET['task_page'] ?? 1;
+                            $tasksToShow = array_slice($tasks, ($page - 1) * $limit, $limit);?>
                             
                             <?php foreach ($tasksToShow as $veiwtask): ?>
                                 <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-yellow-400 hover:bg-gray-100 transition-colors">
@@ -190,15 +196,15 @@ if (isset($_POST['task_id'])) {
                             <?php endforeach; ?>
 
                             <!-- Pagination -->
-                            <?php if ($taskCount > $limit): ?>
-                                <div class="flex justify-center gap-2 mt-4">
-                                    <a href="?task_page=<?php echo max(1, $page - 1); ?>" class="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg transition-all text-sm">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </a>
-                                    <a href="?task_page=<?php echo min(ceil($taskCount / $limit), $page + 1); ?>" class="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg transition-all text-sm">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
-                                </div>
+                            <?php if (count($tasks) > $limit): ?>
+                            <div class="flex justify-center gap-2 mt-4">
+                                <a href="?task_page=<?php echo max(1, $page - 1); ?>" class="...">
+                                <i class="fas fa-chevron-left"></i>
+                                </a>
+                                <a href="?task_page=<?php echo min(ceil(count($tasks) / $limit), $page + 1); ?>" class="...">
+                                <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </div>
                             <?php endif; ?>
                         <?php else: ?>
                             <div class="text-center py-4 text-gray-500">
@@ -216,8 +222,8 @@ if (isset($_POST['task_id'])) {
                     </div>
                     <div class="space-y-4">
                         <?php if (!empty($bills_near_expiry)): ?>
-                            <?php $billCount = count($bills_near_expiry); $billPage = $_GET['bill_page'] ?? 1; ?>
-                            <?php $billsToShow = array_slice($bills_near_expiry, ($billPage - 1) * $limit, $limit); ?>
+                            <?php $billPage = $_GET['bill_page'] ?? 1;
+                                $billsToShow = array_slice($bills_near_expiry, ($billPage - 1) * $limit, $limit); ?>
                             
                             <?php foreach ($billsToShow as $bill): ?>
                                 <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500 hover:bg-red-100 transition-colors">
@@ -238,15 +244,15 @@ if (isset($_POST['task_id'])) {
                             <?php endforeach; ?>
 
                             <!-- Pagination -->
-                            <?php if ($billCount > $limit): ?>
-                                <div class="flex justify-center gap-2 mt-4">
-                                    <a href="?bill_page=<?php echo max(1, $billPage - 1); ?>" class="px-4 py-2 bg-red-400 hover:bg-red-500 text-white rounded-lg transition-all text-sm">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </a>
-                                    <a href="?bill_page=<?php echo min(ceil($billCount / $limit), $billPage + 1); ?>" class="px-4 py-2 bg-red-400 hover:bg-red-500 text-white rounded-lg transition-all text-sm">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
-                                </div>
+                            <?php if (count($bills_near_expiry) > $limit): ?>
+                            <div class="flex justify-center gap-2 mt-4">
+                                <a href="?bill_page=<?php echo max(1, $billPage - 1); ?>" class="...">
+                                <i class="fas fa-chevron-left"></i>
+                                </a>
+                                <a href="?bill_page=<?php echo min(ceil(count($bills_near_expiry) / $limit), $billPage + 1); ?>" class="...">
+                                <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </div>
                             <?php endif; ?>
                         <?php else: ?>
                             <div class="text-center py-4 text-gray-500">
@@ -346,6 +352,52 @@ if (isset($_POST['task_id'])) {
                 document.getElementById('taskDetailModal').classList.add('hidden');
             });
         });
+        // ฟังก์ชันเปิด modal สำหรับคู่มือ
+        function openManual() {
+            document.getElementById('manualModal').classList.remove('hidden');
+            currentPage = 0;
+            showPage(currentPage);
+        }
+
+        // ฟังก์ชันปิด modal สำหรับคู่มือ
+        function closeModal() {
+            document.getElementById('manualModal').classList.add('hidden');
+        }
+
+        // ฟังก์ชันแสดงหน้าที่เลือกในคู่มือ
+        let currentPage = 0;
+
+        function showPage(page) {
+            const pages = document.querySelectorAll('.manual-page');
+            pages.forEach((pageElem, index) => {
+                pageElem.classList.add('hidden'); // ซ่อนทุกหน้า
+                if (index === page) {
+                    pageElem.classList.remove('hidden'); // แสดงหน้า
+                }
+            });
+            // อัปเดตเลขหน้า
+            document.getElementById('pageNumber').textContent = `${page + 1} / ${pages.length}`;
+        }
+
+        // ฟังก์ชันสำหรับหน้าถัดไป
+        function nextPage() {
+            const pages = document.querySelectorAll('.manual-page');
+            if (currentPage < pages.length - 1) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        }
+
+        // ฟังก์ชันสำหรับหน้าก่อนหน้า
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        }
+
+        // เพิ่มการเปิด modal คู่มือเมื่อคลิกปุ่ม
+        document.getElementById('manualButton').addEventListener('click', openManual);
     </script>
 </body>
 </html>

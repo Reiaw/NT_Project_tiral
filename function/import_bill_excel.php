@@ -237,217 +237,214 @@ try {
                     
                     // อ่าน Sheet ของ Package (ถ้ามี)
                     $packageSheet = $spreadsheet->getSheetByName('Package');
-                        if ($packageSheet) {
-                            $packageRows = $packageSheet->toArray();
-                            
-                            // ตรวจสอบหัวคอลัมน์สำหรับ Package
-                            $packageHeader = array_shift($packageRows);
-                            $expectedPackageHeader = ['Code', 'Package Name', 'Package Detail', 'Status Package','Product Name', 'Product Detail', 
-                            'Status product', 'Main Package', 'ICT', 'override Detail', 'Start'];
-                            
-                            if ($packageHeader !== $expectedPackageHeader) {
-                                throw new Exception('รูปแบบ Sheet "Package" ไม่ถูกต้อง');
+                    if ($packageSheet) {
+                        $packageRows = $packageSheet->toArray();
+                        
+                        // ตรวจสอบหัวคอลัมน์สำหรับ Package
+                        $packageHeader = array_shift($packageRows);
+                        $expectedPackageHeader = ['Code', 'Package Name', 'Package Detail', 'Status Package','Product Name', 'Product Detail', 
+                        'Status product', 'Main Package', 'ICT', 'override Detail', 'Start'];
+                        
+                        if ($packageHeader !== $expectedPackageHeader) {
+                            throw new Exception('รูปแบบ Sheet "Package" ไม่ถูกต้อง');
+                        }
+                        
+                        $validPackageStatuses = ['ใช้งาน', 'ยกเลิก'];
+                        $validProductStatuses = ['ใช้งาน', 'ยกเลิก'];
+                        // Initialize package map for the service
+                        $packageServiceMap = [];
+
+                        // Process package data...
+                        foreach ($packageRows as $rowIndex => $row) {
+                            // Skip empty rows
+                            if (empty($row[0])) {
+                                continue;
                             }
                             
-                            $validPackageStatuses = ['ใช้งาน', 'ยกเลิก'];
-                            $validProductStatuses = ['ใช้งาน', 'ยกเลิก'];
-                            // Initialize package map for the service
-                            $packageServiceMap = [];
+                            $code_service = trim($row[0]);
+                            $name_package = trim($row[1]);
+                            $detail_package = isset($row[2]) ? trim($row[2]) : null;
+                            $status_package = trim($row[3]);
+                            $name_product = trim($row[4]);
+                            $detail_product = isset($row[5]) ? trim($row[5]) : null;
+                            $status_product = trim($row[6]);
+                            $main_package_value = trim($row[7]);  // Changed variable name for clarity
+                            $ict_value = trim($row[8]);           // Changed variable name for clarity
+                            $override_detail = trim($row[9]);
+                            $create_at = trim($row[10]);
 
-                            // Process package data...
-                            foreach ($packageRows as $rowIndex => $row) {
-                                // Skip empty rows
-                                if (empty($row[0])) {
-                                    continue;
-                                }
-                                
-                                $code_service = trim($row[0]);
-                                $name_package = trim($row[1]);
-                                $detail_package = isset($row[2]) ? trim($row[2]) : null;
-                                $status_package = trim($row[3]);
-                                $name_product = trim($row[4]);
-                                $detail_product = isset($row[5]) ? trim($row[5]) : null;
-                                $status_product = trim($row[6]);
-                                $main_package_value = trim($row[7]);  // Changed variable name for clarity
-                                $ict_value = trim($row[8]);           // Changed variable name for clarity
-                                $override_detail = trim($row[9]);
-                                $create_at = trim($row[10]);
+                            // Validate status values
+                            if (!in_array($status_package, $validPackageStatuses)) {
+                                $errors[] = "สถานะ Package $status_package ไม่ถูกต้อง";
+                                continue;
+                            }
+                            if (!in_array($status_product, $validProductStatuses)) {
+                                $errors[] = "สถานะ Product $status_product ไม่ถูกต้อง";
+                                continue;
+                            }
 
-                                // Validate status values
-                                if (!in_array($status_package, $validPackageStatuses)) {
-                                    $errors[] = "สถานะ Package $status_package ไม่ถูกต้อง";
-                                    continue;
-                                }
-                                if (!in_array($status_product, $validProductStatuses)) {
-                                    $errors[] = "สถานะ Product $status_product ไม่ถูกต้อง";
-                                    continue;
-                                }
+                            // Check if service code exists in serviceMap
+                            if (!isset($serviceMap[$code_service])) {
+                                $errors[] = "ไม่พบรหัสบริการ $code_service สำหรับแพ็คเกจ $name_package";
+                                continue;
+                            }
+                            
+                            $id_service = $serviceMap[$code_service];
 
-                                // Check if service code exists in serviceMap
-                                if (!isset($serviceMap[$code_service])) {
-                                    $errors[] = "ไม่พบรหัสบริการ $code_service สำหรับแพ็คเกจ $name_package";
-                                    continue;
-                                }
-                                
-                                $id_service = $serviceMap[$code_service];
+                            // Validate date format
+                            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $create_at)) {
+                                $create_at = date('Y-m-d', strtotime($create_at));
+                            }
 
-                                // Validate date format
-                                if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $create_at)) {
-                                    $create_at = date('Y-m-d', strtotime($create_at));
-                                }
+                            // Validate price formats
+                            if (!isValidPrice($main_package_value) || !isValidPrice($ict_value)) {
+                                $errors[] = "Main Package หรือ ICT ต้องเป็นตัวเลขและมีทศนิยมไม่เกิน 2 ตำแหน่ง";
+                                continue;
+                            }
+                            
+                            // Convert to float for calculations
+                            $mainpackage_price = floatval($main_package_value);
+                            $ict_price = floatval($ict_value);
+                            $all_price = $mainpackage_price + $ict_price;
 
-                                // Validate price formats
-                                if (!isValidPrice($main_package_value) || !isValidPrice($ict_value)) {
-                                    $errors[] = "Main Package หรือ ICT ต้องเป็นตัวเลขและมีทศนิยมไม่เกิน 2 ตำแหน่ง";
-                                    continue;
-                                }
-                                
-                                // Convert to float for calculations
-                                $mainpackage_price = floatval($main_package_value);
-                                $ict_price = floatval($ict_value);
-                                $all_price = $mainpackage_price + $ict_price;
+                            // Check if package exists for this service
+                            $checkPackage = "SELECT id_package FROM package_list WHERE id_service = ? AND name_package = ? AND info_package = ?";
+                            $stmt = $conn->prepare($checkPackage);
+                            $stmt->bind_param("iss", $id_service, $name_package , $detail_package);
+                            $stmt->execute();
+                            $resultPackage = $stmt->get_result();
 
-                                // Check if package exists for this service
-                                $checkPackage = "SELECT id_package FROM package_list WHERE id_service = ? AND name_package = ? AND info_package = ?";
-                                $stmt = $conn->prepare($checkPackage);
-                                $stmt->bind_param("iss", $id_service, $name_package , $detail_package);
+                            if ($resultPackage->num_rows > 0) {
+                                // If package exists, update it
+                                $package_row = $resultPackage->fetch_assoc();
+                                $package_id = $package_row['id_package'];
+
+                                $updatePackage = "UPDATE package_list 
+                                                SET info_package = ?, status_package = ?, update_at = NOW() 
+                                                WHERE id_package = ?";
+                                $stmt = $conn->prepare($updatePackage);
+                                $stmt->bind_param("ssi", $detail_package, $status_package, $package_id);
+                                if ($stmt->execute()) {
+                                    $packageUpdatedCount++;
+                                }
+                            } else {
+                                // If package doesn't exist, add a new one
+                                $insertPackage = "INSERT INTO package_list (id_service, name_package, info_package, create_at, update_at, status_package) 
+                                                VALUES (?, ?, ?, ?, NOW(), ?)";
+                                $stmt = $conn->prepare($insertPackage);
+                                $stmt->bind_param("issss", $id_service, $name_package, $detail_package, $create_at, $status_package);
+                                if ($stmt->execute()) {
+                                    $package_id = $conn->insert_id;
+                                    $packageSuccessCount++;
+                                }
+                            }
+                            
+                            // Store package_id in map
+                            $packageServiceMap[$code_service . "_" . $name_package] = $package_id;  // Add package name to avoid collisions
+
+                            // Check if product exists
+                            $checkProduct = "SELECT id_product, create_at FROM product_list WHERE id_package = ? AND name_product = ?";
+                            $stmt = $conn->prepare($checkProduct);
+                            $stmt->bind_param("is", $package_id, $name_product);
+                            $stmt->execute();
+                            $resultProduct = $stmt->get_result();
+
+                            if ($resultProduct->num_rows > 0) {
+                                // If product exists, update it
+                                $product_row = $resultProduct->fetch_assoc();
+                                $product_id = $product_row['id_product'];
+                                $existing_date = $product_row['create_at'];
+
+                                $updateProduct = "UPDATE product_list 
+                                                SET info_product = ?, status_product = ?, update_at = NOW() 
+                                                WHERE id_product = ?";
+                                $stmt = $conn->prepare($updateProduct);
+                                $stmt->bind_param("ssi", $detail_product, $status_product, $product_id);
+                                if ($stmt->execute()) {
+                                    $productUpdatedCount++;
+                                }
+                            } else {
+                                // If product doesn't exist, add a new one
+                                $insertProduct = "INSERT INTO product_list (id_package, name_product, info_product, create_at, update_at, status_product) 
+                                                VALUES (?, ?, ?, ?, NOW(), ?)";
+                                $stmt = $conn->prepare($insertProduct);
+                                $stmt->bind_param("issss", $package_id, $name_product, $detail_product, $create_at, $status_product);
+                                if ($stmt->execute()) {
+                                    $product_id = $conn->insert_id;
+                                    $productSuccessCount++;
+                                }
+                            }
+
+                            // Handle product activation - Only one product per package can be active
+                            if ($status_product === 'ใช้งาน') {
+                                // Get all active products for this package
+                                $checkActiveProducts = "SELECT id_product, create_at FROM product_list 
+                                                    WHERE id_package = ? AND status_product = 'ใช้งาน' AND id_product != ?";
+                                $stmt = $conn->prepare($checkActiveProducts);
+                                $stmt->bind_param("ii", $package_id, $product_id);
                                 $stmt->execute();
-                                $resultPackage = $stmt->get_result();
-
-                                if ($resultPackage->num_rows > 0) {
-                                    // If package exists, update it
-                                    $package_row = $resultPackage->fetch_assoc();
-                                    $package_id = $package_row['id_package'];
-
-                                    $updatePackage = "UPDATE package_list 
-                                                    SET info_package = ?, status_package = ?, update_at = NOW() 
-                                                    WHERE id_package = ?";
-                                    $stmt = $conn->prepare($updatePackage);
-                                    $stmt->bind_param("ssi", $detail_package, $status_package, $package_id);
-                                    if ($stmt->execute()) {
-                                        $packageUpdatedCount++;
-                                    }
-                                } else {
-                                    // If package doesn't exist, add a new one
-                                    $insertPackage = "INSERT INTO package_list (id_service, name_package, info_package, create_at, update_at, status_package) 
-                                                    VALUES (?, ?, ?, ?, NOW(), ?)";
-                                    $stmt = $conn->prepare($insertPackage);
-                                    $stmt->bind_param("issss", $id_service, $name_package, $detail_package, $create_at, $status_package);
-                                    if ($stmt->execute()) {
-                                        $package_id = $conn->insert_id;
-                                        $packageSuccessCount++;
+                                $activeProductsResult = $stmt->get_result();
+                                
+                                // Compare dates to keep only the most recent active product
+                                $shouldDeactivateOthers = true;
+                                
+                                while ($activeProduct = $activeProductsResult->fetch_assoc()) {
+                                    $activeProductDate = new DateTime($activeProduct['create_at']);
+                                    $currentProductDate = new DateTime($create_at);
+                                    
+                                    // If an existing product is newer, don't deactivate others and set current product to inactive
+                                    if ($activeProductDate > $currentProductDate) {
+                                        $shouldDeactivateOthers = false;
+                                        
+                                        // Set current product to inactive
+                                        $updateCurrentProduct = "UPDATE product_list SET status_product = 'ยกเลิก', update_at = NOW() WHERE id_product = ?";
+                                        $stmt = $conn->prepare($updateCurrentProduct);
+                                        $stmt->bind_param("i", $product_id);
+                                        $stmt->execute();
+                                        break;
                                     }
                                 }
                                 
-                                // Store package_id in map
-                                $packageServiceMap[$code_service . "_" . $name_package] = $package_id;  // Add package name to avoid collisions
-
-                                // Check if product exists
-                                $checkProduct = "SELECT id_product, create_at FROM product_list WHERE id_package = ? AND name_product = ?";
-                                $stmt = $conn->prepare($checkProduct);
-                                $stmt->bind_param("is", $package_id, $name_product);
-                                $stmt->execute();
-                                $resultProduct = $stmt->get_result();
-
-                                if ($resultProduct->num_rows > 0) {
-                                    // If product exists, update it
-                                    $product_row = $resultProduct->fetch_assoc();
-                                    $product_id = $product_row['id_product'];
-                                    $existing_date = $product_row['create_at'];
-
-                                    $updateProduct = "UPDATE product_list 
-                                                    SET info_product = ?, status_product = ?, update_at = NOW() 
-                                                    WHERE id_product = ?";
-                                    $stmt = $conn->prepare($updateProduct);
-                                    $stmt->bind_param("ssi", $detail_product, $status_product, $product_id);
-                                    if ($stmt->execute()) {
-                                        $productUpdatedCount++;
-                                    }
-                                } else {
-                                    // If product doesn't exist, add a new one
-                                    $insertProduct = "INSERT INTO product_list (id_package, name_product, info_product, create_at, update_at, status_product) 
-                                                    VALUES (?, ?, ?, ?, NOW(), ?)";
-                                    $stmt = $conn->prepare($insertProduct);
-                                    $stmt->bind_param("issss", $package_id, $name_product, $detail_product, $create_at, $status_product);
-                                    if ($stmt->execute()) {
-                                        $product_id = $conn->insert_id;
-                                        $productSuccessCount++;
-                                    }
-                                }
-
-                                // Handle product activation - Only one product per package can be active
-                                if ($status_product === 'ใช้งาน') {
-                                    // Get all active products for this package
-                                    $checkActiveProducts = "SELECT id_product, create_at FROM product_list 
+                                // If current product is the newest, deactivate all others
+                                if ($shouldDeactivateOthers && $activeProductsResult->num_rows > 0) {
+                                    $updateOtherProducts = "UPDATE product_list SET status_product = 'ยกเลิก', update_at = NOW() 
                                                         WHERE id_package = ? AND status_product = 'ใช้งาน' AND id_product != ?";
-                                    $stmt = $conn->prepare($checkActiveProducts);
+                                    $stmt = $conn->prepare($updateOtherProducts);
                                     $stmt->bind_param("ii", $package_id, $product_id);
                                     $stmt->execute();
-                                    $activeProductsResult = $stmt->get_result();
-                                    
-                                    // Compare dates to keep only the most recent active product
-                                    $shouldDeactivateOthers = true;
-                                    
-                                    while ($activeProduct = $activeProductsResult->fetch_assoc()) {
-                                        $activeProductDate = new DateTime($activeProduct['create_at']);
-                                        $currentProductDate = new DateTime($create_at);
-                                        
-                                        // If an existing product is newer, don't deactivate others and set current product to inactive
-                                        if ($activeProductDate > $currentProductDate) {
-                                            $shouldDeactivateOthers = false;
-                                            
-                                            // Set current product to inactive
-                                            $updateCurrentProduct = "UPDATE product_list SET status_product = 'ยกเลิก', update_at = NOW() WHERE id_product = ?";
-                                            $stmt = $conn->prepare($updateCurrentProduct);
-                                            $stmt->bind_param("i", $product_id);
-                                            $stmt->execute();
-                                            break;
-                                        }
-                                    }
-                                    
-                                    // If current product is the newest, deactivate all others
-                                    if ($shouldDeactivateOthers && $activeProductsResult->num_rows > 0) {
-                                        $updateOtherProducts = "UPDATE product_list SET status_product = 'ยกเลิก', update_at = NOW() 
-                                                            WHERE id_package = ? AND status_product = 'ใช้งาน' AND id_product != ?";
-                                        $stmt = $conn->prepare($updateOtherProducts);
-                                        $stmt->bind_param("ii", $package_id, $product_id);
-                                        $stmt->execute();
-                                    }
                                 }
+                            }
 
-                                // Handle override data
-                                $checkOverride = "SELECT id_overide FROM overide WHERE id_product = ?";
-                                $stmt = $conn->prepare($checkOverride);
-                                $stmt->bind_param("i", $product_id);
-                                $stmt->execute();
-                                $resultOverride = $stmt->get_result();
+                            // Handle override data
+                            $checkOverride = "SELECT id_overide FROM overide WHERE id_product = ?";
+                            $stmt = $conn->prepare($checkOverride);
+                            $stmt->bind_param("i", $product_id);
+                            $stmt->execute();
+                            $resultOverride = $stmt->get_result();
 
-                                if ($resultOverride->num_rows > 0) {
-                                    // If override exists, update it
-                                    $updateOverride = "UPDATE overide
-                                                    SET mainpackage_price = ?, ict_price = ?, info_overide = ?, all_price = ? 
-                                                    WHERE id_product = ?";
-                                    $stmt = $conn->prepare($updateOverride);
-                                    $stmt->bind_param("ddsdi", $mainpackage_price, $ict_price, $override_detail, $all_price, $product_id);
-                                    if ($stmt->execute()) {
-                                        $overrideUpdatedCount++;
-                                    }
-                                } else {
-                                    // If override doesn't exist, add a new one
-                                    $insertOverride = "INSERT INTO overide (id_product, mainpackage_price, ict_price, info_overide, all_price) 
-                                                    VALUES (?, ?, ?, ?, ?)";
-                                    $stmt = $conn->prepare($insertOverride);
-                                    $stmt->bind_param("iddsd", $product_id, $mainpackage_price, $ict_price, $override_detail, $all_price);
-                                    if ($stmt->execute()) {
-                                        $overrideSuccessCount++;
-                                    }
+                            if ($resultOverride->num_rows > 0) {
+                                // If override exists, update it
+                                $updateOverride = "UPDATE overide
+                                                SET mainpackage_price = ?, ict_price = ?, info_overide = ?, all_price = ? 
+                                                WHERE id_product = ?";
+                                $stmt = $conn->prepare($updateOverride);
+                                $stmt->bind_param("ddsdi", $mainpackage_price, $ict_price, $override_detail, $all_price, $product_id);
+                                if ($stmt->execute()) {
+                                    $overrideUpdatedCount++;
+                                }
+                            } else {
+                                // If override doesn't exist, add a new one
+                                $insertOverride = "INSERT INTO overide (id_product, mainpackage_price, ict_price, info_overide, all_price) 
+                                                VALUES (?, ?, ?, ?, ?)";
+                                $stmt = $conn->prepare($insertOverride);
+                                $stmt->bind_param("iddsd", $product_id, $mainpackage_price, $ict_price, $override_detail, $all_price);
+                                if ($stmt->execute()) {
+                                    $overrideSuccessCount++;
                                 }
                             }
                         }
-                                
-                            
+                    }           
                 }
-                
             }
             
             // อ่าน Sheet ของ Gadget (ถ้ามี)
