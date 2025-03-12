@@ -1,163 +1,386 @@
-<!-- ./components/manual_modal.php -->
-<div id="manualModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg w-1/2 p-6 max-h-[80vh] overflow-y-auto">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold" id="modalTitle">คู่มือการใช้งาน</h2>
-            <button onclick="closeModal()" class="text-gray-500 text-lg">&times;</button>
+<div id="manualModal" class="hidden fixed inset-0 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 mt-20">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+        <!-- Header -->
+        <div class="flex justify-between items-center px-6 py-4 border-b">
+            <h2 class="text-2xl font-bold text-gray-800">คู่มือการใช้งานระบบ</h2>
+            <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 transition-colors">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
         </div>
-        
-        <!-- Content of the manual, each page will be inside a div -->
-        <div id="manualContent" class="space-y-4 p-6 bg-gray-100 rounded-lg shadow-lg">
-            <div class="manual-page block" id="page1">
-                <h3 class="text-xl font-semibold text-blue-700">หน้าที่ 1: ภาพรวมของระบบ</h3>
-                <img src="../img/C0-1.png" alt="รูปภาพ" class="w-full max-w-md mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">ในหน้าการจัดการลูกค้า สามารถเพิ่ม ลบ แก้ไขข้อมูลลูกค้า และจัดการประเภทของลูกค้าได้</p>
-                <p class="text-gray-700 mt-2">ประกอบไปด้วย:</p>
-                <ul class="list-disc list-inside text-gray-700 ml-4">
-                    <li>การจัดการลูกค้าในระบบ</li>
-                    <li>การจัดการประเภทของลูกค้า</li>
-                    <li>การนำเข้าข้อมูลลูกค้า</li>
-                    <li>การค้นหาลูกค้าด้วยตัวกรอง</li>
-                    <li>การแสดงข้อมูลลูกค้า</li>
-                </ul>
-            </div>
-            
-            <div class="manual-page hidden" id="page2">
-                <h3 class="text-xl font-semibold text-blue-700">หน้าที่ 2: การจัดการระบบลูกค้า</h3>
-                <p class="text-gray-700">1. การเพิ่มลูกค้าโดยใช้ฟอร์ม จากปุ่มเพิ่มข้อมูลลูกค้า</p>
-                <img src="../img/C1-1.png" alt="รูปภาพ" class="w-full max-w-md mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">ลักษณะของฟอร์มจะมีดังนี้:</p>
-                <img src="../img/C1-2.png" alt="รูปภาพ" class="w-full max-w-md mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">ข้อมูลที่มีลักษณะดังนี้:</p>
-                <ul class="list-disc list-inside text-gray-700 ml-4">
-                    <li><strong>1.1. ชื่อลูกค้า:</strong> เป็นชื่อของหน่วยงานที่ใช้บริการ ไม่เกิน 100 ตัวอักษร (จำเป็น)</li>
-                    <li><strong>1.2. ประเภทของลูกค้า:</strong> สามารถเลือกประเภทลูกค้าที่อยู่ในฐานระบบ (จำเป็น)</li>
-                    <li><strong>1.3. เบอร์โทรศัพท์:</strong> ใส่เบอร์โทรศัพท์และสามารถใส่ชื่อของลูกค้าตามหลังได้ (ไม่จำเป็น)</li>
-                    <li><strong>1.4. สถานะ:</strong> เลือกสถานะระหว่างใช้งานหรือไม่ใช้งาน (จำเป็น)</li>
-                    <li><strong>1.5. อำเภอ:</strong> เลือกตำบลที่ตั้งหน่วยงาน (จำเป็น)</li>
-                    <li><strong>1.6. ตำบล:</strong> เลือกอำเภอที่ตั้งหน่วยงาน (จำเป็น)</li>
-                    <li><strong>1.7. ข้อมูลที่อยู่เพิ่ม:</strong> ใส่รายละเอียดเพิ่มเติมเกี่ยวกับที่อยู่ เช่น หมู่ ซอย ถนน (ไม่จำเป็น)</li>
-                </ul>
-                <p>ข้อควรระวัง</p>
-                <ul class="list-disc list-inside text-gray-700 ml-4">
-                    <li><strong>1.1. ชื่อลูกค้าจะต้องไม่ซ้ำกับในระบบ</strong></li>
-                    <li><strong>1.2. เบอร์โทรศัพท์จำเป็นต้องมีอย่างน้อย 9 หลัก และใส่ชื่อตามหลังได้</strong></li>
-                    <li><strong>1.3. กรุณาเลือกอำเภอก่อน เพื่อระบบจะกรองตำบลในอำเภอนั้น</strong> </li>
-                    <li><strong>1.4. หากไม่มีเบอร์โทรศัพท์ไม่จำเป็นต้องใส่อะไร</strong></li>
-                </ul>
-                <p class="text-gray-700">2. การแก้ไขข้อมูลลูกค้าโดยใช้ฟอร์ม จากปุ่มแก้ไขข้อมูลลูกค้า</p>       
-                <img src="../img/C1-3.png" alt="รูปภาพ" class="w-32 mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">ลักษณะของฟอร์มจะมีดังนี้:</p>
-                <img src="../img/C1-4.png" alt="รูปภาพ" class="w-full max-w-md mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">แสดงข้อมูลลูกค้าจากในฐานระบบ โดยสามารถแก้ไขข้อมูลได้ทุกอย่างในฟอร์มนี้</p>
-                <p>ข้อควรระวัง</p>
-                <ul class="list-disc list-inside text-gray-700 ml-4">
-                    <li><strong>2.1. การแก้ไชช้อมูลลูกค้าจำเป็นต้องมีรูปแบบที่เหมือนตอนเพิ่มลูกค้า</strong></li>
-                </ul>
-                <p class="text-gray-700">3. การลบลูกค้า จากปุ่มลบข้อมูลลูกค้า</p>
-                <img src="../img/C1-5.png" alt="รูปภาพ" class="w-32 mx-auto my-4 rounded-lg shadow">
-                <p>การลูกค้านั้น คือการนำข้อมูลลูกค้าออกจากฐานระบบ โดยจะขึ้นข้อความถามความต้องการอีกครั้งในการลบ</p>
-                <img src="../img/C1-6.png" alt="รูปภาพ" class="w-full max-w-md mx-auto my-4 rounded-lg shadow">
-                <p>ข้อควรระวัง</p>
-                <ul class="list-disc list-inside text-gray-700 ml-4">
-                    <li><strong>3.1. การลบข้อมูลลูกค้านั้นจะทำให้ข้อมูลของลูกค้าหายไปตลอดกาล ไม่สามารถกู้คืนได้</strong></li>
-                    <li><strong>3.2. หากในระบบลูกค้ายังคงมีบิลหรือบริการอะไรอยู่ในระบบจะไม่สามารถลบออกไปได้</strong></li>
-                    <img src="../img/C1-7.png" alt="รูปภาพ" class="w-full max-w-md mx-auto my-4 rounded-lg shadow">
-                </ul>
-            </div>
-            <div class="manual-page hidden" id="page3">
-                <h3 class="text-lg font-semibold">หน้าที่ 3: การจัดการประเภทลูกค้า</h3>
-                <p class="text-gray-700">กดเข้าไปที่การจัดการลูกค้า เพื่อไปหน้าจัดการลูกค้า</p>
-                <img src="../img/C2-1.png" alt="รูปภาพ" class="w-full max-w-md mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">ลักษณะของหน้าจัดการลูกค้าจะมีดังนี้:</p>
-                <img src="../img/C2-2.png" alt="รูปภาพ" class="w-full max-w-md mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">1. การเพิ่มประเภทลูกค้า</p>
-                <img src="../img/C2-3.png" alt="รูปภาพ" class="w-32 mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">ลักษณะของฟอร์มจะมีดังนี้:</p>
-                <img src="../img/C2-4.png" alt="รูปภาพ" class="w-full max-w-md mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">สามารถเพิ่มประเภทลูกค้าที่ต้องการเข้าไปในระบบได้เลย </p>
-                <p>ข้อควรระวัง</p>
-                <ul class="list-disc list-inside text-gray-700 ml-4">
-                    <li><strong>1.1. ประเภทลูกค้าจะต้องไม่ซ้ำกับในระบบ</strong></li>
-                    <li><strong>1.2. ตรวจสอบประเภทลูกค้าก่อนจะเพิ่มเข้าไปใหม่ เพื่อไม่ให้มีข้อมูลซ้ำซอนเกินไป</strong></li>
-                </ul>
-                <p class="text-gray-700">2. การแก้ไขประเภทลูกค้า</p>
-                <img src="../img/C1-3.png" alt="รูปภาพ" class="w-32 mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">ลักษณะของฟอร์มจะมีดังนี้:</p>
-                <img src="../img/C2-5.png" alt="รูปภาพ" class="w-full max-w-md mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">สามารถแก้ไขประเภทลูกค้าจากเดิมได้ โดยจะเปลี่ยนแปลงชื่อประเภทลูกค้าที่ใช้ประเภทนี้ด้วย </p>
-                <p class="text-gray-700">3. การลบประเภทลูกค้า</p>
-                <img src="../img/C1-5.png" alt="รูปภาพ" class="w-32 mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">สามารถลบประเภทลูกค้าออกจากฐานข้อมูลได้</p>
-                <p>ข้อควรระวัง</p>
-                <ul class="list-disc list-inside text-gray-700 ml-4">
-                    <li><strong>3.1. การลบประเภทลูกค้าออกจากฐานข้อมูล จะต้องไม่มีลูกค้าประเภทนี้อยู่ โดยสังเกตจาก จำนวนลูกค้า หากเป็น 0 ปุ่มลบจะเป็นสีแดงและสามารถลบได้แต่หากมีลูกค้าประเภมนี้อยู่ ปุ่มจะเป็นสีเทาและไม่สามารถกดลบได้</strong></li>
-                    <img src="../img/C2-6.png" alt="รูปภาพ" class="w-full max-w-xl mx-auto my-4 rounded-lg shadow">  
-                </ul>
+
+        <!-- Content -->
+        <div class="overflow-y-auto flex-1 p-6">
+            <div class="space-y-8">
+                <!-- Page 1 -->
+                <div class="manual-page block" id="page1">
+                    <div class="prose max-w-none">
+                        <h3 class="text-2xl font-bold text-blue-600 mb-4">หน้าที่ 1: ภาพรวมของระบบ</h3>
+                        <p class="text-gray-700 text-gl leading-relaxed">
+                                ในหน้าการจัดการลูกค้า สามารถเพิ่ม ลบ แก้ไขข้อมูลลูกค้า และจัดการประเภทของลูกค้าได้
+                        </p>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                            <img src="../img/C0-1.png" alt="ภาพรวมระบบ" class="w-full rounded-lg border border-gray-200 mb-4">
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="bg-white p-4 rounded-lg border border-gray-200">
+                                    <h4 class="font-semibold text-gray-800 mb-2">ส่วนประกอบหลัก:</h4>
+                                    <ul class="list-disc pl-5">
+                                        <li>การจัดการลูกค้าในระบบ</li>
+                                        <li>การจัดการประเภทของลูกค้า</li>
+                                        <li>การนำเข้าข้อมูลลูกค้า</li>
+                                        <li>การค้นหาลูกค้าด้วยตัวกรอง</li>
+                                        <li>การแสดงข้อมูลลูกค้า</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page 2 -->
+                <div class="manual-page hidden" id="page2">
+                    <div class="prose max-w-none">
+                        <h3 class="text-2xl font-bold text-blue-600 mb-2">หน้าที่ 2: การจัดการระบบลูกค้า</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                                ในหน้าการจัดการลูกค้า สามารถเพิ่ม ลบ แก้ไขข้อมูลลูกค้า และจัดการประเภทของลูกค้าได้
+                            </p>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-6"> 
+                            
+                            <p class="text-gray-700 text-xl font-bold mt-2">2.1. การเพิ่มลูกค้าโดยใช้ฟอร์ม จากปุ่มเพิ่มข้อมูลลูกค้า</p>
+                            <img src="../img/C1-1.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                            <p class="text-gray-700 text-gl leading-relaxed">ลักษณะของฟอร์มจะมีดังนี้:</p>
+                            <img src="../img/C1-2.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                            <p class="text-gray-700 text-gl leading-relaxed">กรอกข้อมูลตามรายละเอียดต่อไปนี้:</p>
+                            <!-- ตารางแสดงข้อมูล -->
+                            <div class="overflow-x-auto">
+                                <table class="table-auto w-full border-collapse border border-gray-300">
+                                    <thead>
+                                        <tr class="bg-gray-200">
+                                            <th class="border border-gray-300 px-4 py-2 text-left">ประเภทข้อมูล</th>
+                                            <th class="border border-gray-300 px-4 py-2 text-left">คำอธิบาย</th>
+                                            <th class="border border-gray-300 px-4 py-2 text-left">ข้อกำหนด</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border border-gray-300 px-4 py-2">ชื่อลูกค้า</td>
+                                            <td class="border border-gray-300 px-4 py-2">ชื่อหน่วยงานที่ใช้บริการ</td>
+                                            <td class="border border-gray-300 px-4 py-2">- ไม่เกิน 100 ตัวอักษร<br>- จำเป็นต้องกรอก<br>- ต้องไม่ซ้ำกับชื่อที่มีอยู่แล้วในระบบ</td>
+                                        </tr>
+                                        <tr class="bg-gray-50">
+                                            <td class="border border-gray-300 px-4 py-2">ประเภท</td>
+                                            <td class="border border-gray-300 px-4 py-2">ประเภทของลูกค้าที่อยู่ในระบบ</td>
+                                            <td class="border border-gray-300 px-4 py-2">- จำเป็นต้องเลือก</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-300 px-4 py-2">เบอร์โทรศัพท์</td>
+                                            <td class="border border-gray-300 px-4 py-2">เบอร์โทรศัพท์และชื่อของลูกค้า</td>
+                                            <td class="border border-gray-300 px-4 py-2">- ไม่จำเป็นต้องกรอก<br>- หากกรอกต้องมีอย่างน้อย 9 หลัก</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-300 px-4 py-2">สถานะ</td>
+                                            <td class="border border-gray-300 px-4 py-2">สถานะการใช้งานของลูกค้า</td>
+                                            <td class="border border-gray-300 px-4 py-2">- จำเป็นต้องเลือก</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-300 px-4 py-2">อำเภอ</td>
+                                            <td class="border border-gray-300 px-4 py-2">อำเภอที่ตั้งหน่วยงาน</td>
+                                            <td class="border border-gray-300 px-4 py-2">- จำเป็นต้องเลือก<br>- เลือกก่อนเพื่อกรองตำบล</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-300 px-4 py-2">ตำบล</td>
+                                            <td class="border border-gray-300 px-4 py-2">ตำบลที่ตั้งหน่วยงาน</td>
+                                            <td class="border border-gray-300 px-4 py-2">- จำเป็นต้องเลือก</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-300 px-4 py-2">รายละเอียด</td>
+                                            <td class="border border-gray-300 px-4 py-2">รายละเอียดเพิ่มเติมของหน่วยงาน</td>
+                                            <td class="border border-gray-300 px-4 py-2">- ไม่จำเป็นต้องกรอก</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+                                    <h4 class="text-lg font-bold text-yellow-700 flex items-center">
+                                        <svg class="w-6 h-6 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M8.257 3.099c.766-1.36 2.72-1.36 3.486 0l6.518 11.57c.746 1.325-.187 2.981-1.743 2.981H3.482c-1.556 0-2.489-1.656-1.743-2.981l6.518-11.57zM11 14a1 1 0 11-2 0 1 1 0 012 0zm-1-2a1 1 0 001-1V7a1 1 0 00-2 0v4a1 1 0 001 1z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        ข้อควรระวัง
+                                    </h4>
+                                    <ul class="list-disc pl-8 text-gray-700 mt-2">
+                                        <li>ชื่อลูกค้าต้องไม่ซ้ำกับที่มีอยู่แล้วในระบบ</li>
+                                        <li>เบอร์โทรศัพท์ต้องมีอย่างน้อย 9 หลัก (หากมีการกรอก)</li>
+                                        <li>เบอร์โทรศัพท์สามารถใส่ข้อความตามหลังได้</li>
+                                        <li>หากไม่มีเบอร์โทรศัพท์ไม่จำเป็นต้องกรอก</li>
+                                        <li>เลือกอำเภอก่อนเพื่อระบบจะกรองตำบลในอำเภอนั้น</li>               
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                            <p class="text-gray-700 text-xl font-bold mt-2">2.2. การแก้ไขข้อมูลลูกค้าโดยใช้ฟอร์ม คลิกที่ปุ่มแก้ไข (ไอคอนดินสอ)</p>
+                            <img src="../img/C1-3.png" alt="การเพิ่มลูกค้า" class="w-1/2 mx-auto rounded-lg border border-gray-200 mb-4">
+                            <p class="text-gray-700 text-gl leading-relaxed">แก้ไขข้อมูลในฟอร์มที่แสดงขึ้น:</p>
+                            <img src="../img/C1-4.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                            <p class="text-gray-700 text-gl leading-relaxed">แก้ไขข้อมูลตามต้องการ โดยยึดตามกฎเกณฑ์เดียวกับการเพิ่มข้อมูลลูกค้า และคลิกปุ่ม "บันทึก" เพื่อบันทึกการเปลี่ยนแปลง</p>
+                            <div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+                                    <h4 class="text-lg font-bold text-yellow-700 flex items-center">
+                                        <svg class="w-6 h-6 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M8.257 3.099c.766-1.36 2.72-1.36 3.486 0l6.518 11.57c.746 1.325-.187 2.981-1.743 2.981H3.482c-1.556 0-2.489-1.656-1.743-2.981l6.518-11.57zM11 14a1 1 0 11-2 0 1 1 0 012 0zm-1-2a1 1 0 001-1V7a1 1 0 00-2 0v4a1 1 0 001 1z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        ข้อควรระวัง
+                                    </h4>
+                                    <ul class="list-disc pl-8 text-gray-700 mt-2">
+                                        <li>การแก้ไขข้อมูลลูกค้าต้องเปลี่ยนแปลงอย่างระมัดระวัง</li>
+                                    </ul>
+                                </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                            <p class="text-gray-700 text-xl font-bold mt-2">2.3. การลบข้อมูลลูกค้า คลิกที่ปุ่มลบ (ไอคอนถังขยะ)</p>
+                            <img src="../img/C1-5.png" alt="การเพิ่มลูกค้า" class="w-1/2 mx-auto rounded-lg border border-gray-200 mb-4">
+                            <p class="text-gray-700 text-gl leading-relaxed">ยืนยันการลบข้อมูลในกล่องข้อความที่ปรากฏและคลิกปุ่ม "ตกลง" เพื่อลบข้อมูลลูกค้า</p>
+                            <img src="../img/C1-6.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                            <div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+                                <h4 class="text-lg font-bold text-yellow-700 flex items-center">
+                                    <svg class="w-6 h-6 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.766-1.36 2.72-1.36 3.486 0l6.518 11.57c.746 1.325-.187 2.981-1.743 2.981H3.482c-1.556 0-2.489-1.656-1.743-2.981l6.518-11.57zM11 14a1 1 0 11-2 0 1 1 0 012 0zm-1-2a1 1 0 001-1V7a1 1 0 00-2 0v4a1 1 0 001 1z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    ข้อควรระวัง
+                                </h4>
+                                <ul class="list-disc pl-8 text-gray-700 mt-2">
+                                    <li>การลบข้อมูลลูกค้าไม่สามารถกู้คืนได้</li>
+                                    <li>ไม่สามารถลบข้อมูลลูกค้าที่ยังมีบิลหรือบริการอยู่ในระบบ</li>
+                                    <img src="../img/C1-7.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page 3 -->
+                <div class="manual-page hidden" id="page3">
+                    <div class="prose max-w-none">
+                        <h3 class="text-2xl font-bold text-blue-600 mb-2">หน้าที่ 3: การจัดการประเภทลูกค้า</h3>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed">
+                        ในหน้าการจัดการประเภทลูกค้าลูกค้า สามารถเพิ่ม ลบ จัดการประเภทของลูกค้าได้
+                    </p>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-gray-700 text-xl font-bold mt-2">3.1. คลิกที่เมนู "การจัดการลูกค้า" เพื่อไปที่หน้าจัดการประเภทลูกค้า</p>
+                        <img src="../img/C2-1.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-gl leading-relaxed">ระบบจะแสดงหน้าจัดการประเภทลูกค้า</p>
+                        <img src="../img/C2-2.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-xl font-bold mt-2">3.2. การเพิ่มประเภทลูกค้า คลิกที่ปุ่ม "เพิ่มประเภทลูกค้า"</p>
+                        <img src="../img/C2-3.png" alt="การเพิ่มลูกค้า" class="w-1/2 mx-auto rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-gl leading-relaxed">กรอกชื่อประเภทลูกค้าในฟอร์มที่ปรากฏ</p>
+                        <img src="../img/C2-4.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-gl leading-relaxed">คลิกปุ่ม "บันทึก" เพื่อบันทึกข้อมูลประเภทลูกค้า</p>
+                        <div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+                            <h4 class="text-lg font-bold text-yellow-700 flex items-center">
+                                <svg class="w-6 h-6 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.766-1.36 2.72-1.36 3.486 0l6.518 11.57c.746 1.325-.187 2.981-1.743 2.981H3.482c-1.556 0-2.489-1.656-1.743-2.981l6.518-11.57zM11 14a1 1 0 11-2 0 1 1 0 012 0zm-1-2a1 1 0 001-1V7a1 1 0 00-2 0v4a1 1 0 001 1z" clip-rule="evenodd"></path>
+                                </svg>
+                                ข้อควรระวัง
+                            </h4>
+                            <ul class="list-disc pl-8 text-gray-700 mt-2">
+                                <li>ชื่อประเภทลูกค้าต้องไม่ซ้ำกับที่มีอยู่แล้วในระบบ</li>
+                                <li>ควรตรวจสอบประเภทลูกค้าที่มีอยู่ก่อนเพื่อป้องกันข้อมูลซ้ำซ้อน</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-gray-700 text-xl font-bold mt-2">3.3. การแก้ไขประเภทลูกค้า คลิกที่ปุ่มแก้ไข (ไอคอนดินสอ)"</p>
+                        <img src="../img/C1-3.png" alt="การเพิ่มลูกค้า" class="w-1/2 mx-auto rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-gl leading-relaxed">แก้ไขชื่อประเภทลูกค้าในฟอร์มที่แสดงขึ้น และคลิกปุ่ม "บันทึก" เพื่อบันทึกการเปลี่ยนแปลง</p>
+                        <p class="text-gray-700 text-gl leading-relaxed"><strong>หมายเหตุ:</strong>การแก้ไขประเภทลูกค้าจะเปลี่ยนแปลงชื่อประเภทสำหรับลูกค้าทุกรายที่ใช้ประเภทนั้น</p>
+                        <img src="../img/C2-5.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-gray-700 text-xl font-bold mt-2">3.3. การลบประเภทลูกค้า คลิกที่ปุ่มลบ (ไอคอนถังขยะ)"</p>
+                        <img src="../img/C1-5.png" alt="การเพิ่มลูกค้า" class="w-1/2 mx-auto rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-gl leading-relaxed">ยืนยันการลบข้อมูลในกล่องข้อความที่ปรากฏ</p>
+                        <div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+                            <h4 class="text-lg font-bold text-yellow-700 flex items-center">
+                                <svg class="w-6 h-6 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.766-1.36 2.72-1.36 3.486 0l6.518 11.57c.746 1.325-.187 2.981-1.743 2.981H3.482c-1.556 0-2.489-1.656-1.743-2.981l6.518-11.57zM11 14a1 1 0 11-2 0 1 1 0 012 0zm-1-2a1 1 0 001-1V7a1 1 0 00-2 0v4a1 1 0 001 1z" clip-rule="evenodd"></path>
+                                </svg>
+                                ข้อควรระวัง
+                            </h4>
+                            <ul class="list-disc pl-8 text-gray-700 mt-2">
+                                <li>สามารถลบประเภทลูกค้าได้เฉพาะกรณีที่ไม่มีลูกค้าใช้ประเภทนั้นอยู่ (จำนวนลูกค้า = 0)</li>
+                                <li>ปุ่มลบจะเป็นสีแดงหากสามารถลบได้ และเป็นสีเทาหากไม่สามารถลบได้</li>
+                                <img src="../img/C2-6.png" alt="การตรวจสอบการลบ" class="w-full rounded-lg border border-gray-200 mb-4">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
 
+            <!-- Page 4 -->
             <div class="manual-page hidden" id="page4">
-                <h3 class="text-lg font-semibold">หน้าที่ 4: การนำเข้าข้อมูลโดย Excel</h3>
-                <p>คำอธิบาย: การนำข้อมูล excel สามารถประหยัดเวลาในการนนำเข้าข้อมูลลูกที่ละหลายคน</p>
-                <p>โดยเริ่มจากเลือกไฟล์ที่ excel ที่ต้องกดปุ่มเลือกไฟล์</p>
-                <img src="../img/C3-1.png" alt="รูปภาพ" class="w-full max-w-md mx-auto my-4 rounded-lg shadow">
-                <img src="../img/C3-2.png" alt="รูปภาพ" class="w-full max-w-md mx-auto my-4 rounded-lg shadow">
-                <p>หลังจากเลือกไฟล์ให้กด นำเข้า excel ก็จะเสร็จสิ้น</p>
-                <p>1.รูปแบบไฟล์ excel ที่ถูกต้อง</p>
-                <img src="../img/C3-3.png" alt="รูปภาพ" class="w-full max-w-xl mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">ข้อมูลต้องมีตามหัวข้อลักษณะดังนี้:</p>
-                <ul class="list-disc list-inside text-gray-700 ml-4">
-                    <li><strong>1.1. Name:</strong> ใส่ชื่อของหน่วยงานที่ใช้บริการ ไม่เกิน 100 ตัวอักษร (จำเป็น)</li>
-                    <li><strong>1.2. Type:</strong> ใส่ประเภทของลูกค้าโดยต้องตรงกับในฐานระบบ (จำเป็น)</li>
-                    <li><strong>1.3. Phone:</strong> ใส่เบอร์โทรศัพท์และสามารถใส่ชื่อของลูกค้าตามหลังได้ (ไม่จำเป็น)</li>
-                    <li><strong>1.4. Status:</strong> ใส่ระหว่างใช้งานหรือไม่ใช้งาน (จำเป็น)</li>
-                    <li><strong>1.5. Address:</strong> ใส่ตำบลที่ตั้งหน่วยงานที่ตรงกับในฐานระบบ (จำเป็น)</li>
-                    <li><strong>1.6. Tambon:</strong> ใส่อำเภอที่ตั้งหน่วยงานที่ตรงกับในฐานระบบ (จำเป็น)</li>
-                    <li><strong>1.7. Amphure:</strong> ใส่รายละเอียดเพิ่มเติมเกี่ยวกับที่อยู่ เช่น หมู่ ซอย ถนน (ไม่จำเป็น)</li>
-                </ul>
-                <p>ข้อควรระวัง</p>
-                <ul class="list-disc list-inside text-gray-700 ml-4">
-                    <li><strong>1.1. ชื่อลูกค้าจะต้องไม่ซ้ำกับในระบบและจะตรงใส่ให้ครบทุกช่อง</strong></li>
-                    <li><strong>1.2. ประเภทของลูกค้าจะต้องมีในฐานระบบ หากใส่ประเภที่ไม่มีในฐานระบบจะไม่สามารถทำงานได้</strong></li>
-                    <li><strong>1.3. หากมีข้อมูลูกค้าคนเดิมระบบจะไม่ทำการเพิ่มลงไป</strong> </li>
-                    <li><strong>1.4. เบอร์โทรศัพท์ไม่จำเป็นต้องใส่</strong></li>
-                    <li><strong>1.5. หากใส่เบอร์โทรศัพท์จำเป็นต้องมี 9-10 หลัก โดยมีข้อความตามหลังได้</strong></li>
-                    <li><strong>1.6. อำเภอและตำบลจำเป็นต้องใส่ให้ถูกต้องของในจังหวัดกาญจนบุรี</strong></li>
-                </ul>
+                <div class="prose max-w-none">
+                    <h3 class="text-2xl font-bold text-blue-600 mb-2">หน้าที่ 4: การนำเข้าข้อมูลลูกค้า</h3>
+                </div>
+                <p class="text-gray-700 leading-relaxed">
+                    ในหน้าการนำเข้าข้อมูลลูกค้า สามารถนำเข้าข้อมูลลูกค้าจากไฟล์ Excel ได้
+                </p>
+                <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                    <p class="text-gray-700 text-xl font-bold mt-2">4.1. คลิกที่ปุ่ม "เลือกไฟล์" เพื่อเลือกไฟล์ Excel</p>
+                    <p class="text-gray-700 text-gl leading-relaxed">เลือกไฟล์ Excel และคลิกปุ่ม "นำเข้า และคลิกปุ่ม "นำเข้า excel" เพื่อเริ่มการนำเข้าข้อมูล"</p>
+                    <img src="../img/C3-1.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                    <img src="../img/C3-2.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                    <p class="text-gray-700 text-xl font-bold mt-2">4.2. รูปแบบไฟล์ Excel ที่ถูกต้อง</p>
+                    <p class="text-gray-700 text-gl leading-relaxed">ไฟล์ Excel ต้องมีรูปแบบและคอลัมน์ตามที่กำหนด:</p>
+                    <img src="../img/C3-3.png" alt="การเพิ่มลูกค้า" class="w-full max-w-none rounded-lg border border-gray-200 mb-4">
+                    <div class="overflow-x-auto">
+                        <table class="table-auto w-full border-collapse border border-gray-300">
+                            <thead>
+                                <tr class="bg-gray-200">
+                                    <th class="border border-gray-300 px-4 py-2 text-left">ชื่อหัวตาราง</th>
+                                    <th class="border border-gray-300 px-4 py-2 text-left">คำอธิบาย</th>
+                                    <th class="border border-gray-300 px-4 py-2 text-left">ข้อกำหนด</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">Name</td>
+                                    <td class="border border-gray-300 px-4 py-2">ชื่อหน่วยงานที่ใช้บริการ</td>
+                                    <td class="border border-gray-300 px-4 py-2">- ไม่เกิน 100 ตัวอักษร<br>- จำเป็นต้องกรอก<br>- ต้องไม่ซ้ำกับชื่อที่มีอยู่แล้วในระบบ</td>
+                                </tr>
+                                <tr class="bg-gray-50">
+                                    <td class="border border-gray-300 px-4 py-2">Type</td>
+                                    <td class="border border-gray-300 px-4 py-2">ประเภทของลูกค้า</td>
+                                    <td class="border border-gray-300 px-4 py-2">- จำเป็นต้องกรอก<br>- ต้องตรงกับประเภทที่มีอยู่ในระบบ</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">Phone</td>
+                                    <td class="border border-gray-300 px-4 py-2">เบอร์โทรศัพท์และชื่อของลูกค้า</td>
+                                    <td class="border border-gray-300 px-4 py-2">- ไม่จำเป็นต้องกรอก<br>- หากกรอกต้องมีอย่างน้อย 9 หลัก<br>- สามารถใส่ชื่อตามท้ายได้</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">Status</td>
+                                    <td class="border border-gray-300 px-4 py-2">สถานะการใช้งานของลูกค้า</td>
+                                    <td class="border border-gray-300 px-4 py-2">- จำเป็นต้องกรอก("ใช้งาน" หรือ "ไม่ใช้งาน")</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">Address</td>
+                                    <td class="border border-gray-300 px-4 py-2">รายละเอียดเพิ่มเติมของหน่วยงาน</td>
+                                    <td class="border border-gray-300 px-4 py-2">- ไม่จำเป็นต้องกรอก<br>- ใส่ข้อมูลเพิ่มเติมบ่งบอกถึงที่ตั้งของหน่วยงาน</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">Tambon</td>
+                                    <td class="border border-gray-300 px-4 py-2">อำเภอที่ตั้งหน่วยงาน</td>
+                                    <td class="border border-gray-300 px-4 py-2">- จำเป็นต้องกรอก<br>- ใส่ตำบลให้ตรงกับในฐานระบบ(กาญจนบุรี)</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">Amphure</td>
+                                    <td class="border border-gray-300 px-4 py-2">ตำบลที่ตั้งหน่วยงาน</td>
+                                    <td class="border border-gray-300 px-4 py-2">- จำเป็นต้องกรอก<br>- ใส่อำเภอให้ตรงกับในฐานระบบ(กาญจนบุรี) <br>- ใส่อำเภอให้ตรงกับตำบลที่เกี่ยวข้อง</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+                            <h4 class="text-lg font-bold text-yellow-700 flex items-center">
+                                <svg class="w-6 h-6 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.766-1.36 2.72-1.36 3.486 0l6.518 11.57c.746 1.325-.187 2.981-1.743 2.981H3.482c-1.556 0-2.489-1.656-1.743-2.981l6.518-11.57zM11 14a1 1 0 11-2 0 1 1 0 012 0zm-1-2a1 1 0 001-1V7a1 1 0 00-2 0v4a1 1 0 001 1z" clip-rule="evenodd"></path>
+                                </svg>
+                                ข้อควรระวัง
+                            </h4>
+                            <ul class="list-disc pl-8 text-gray-700 mt-2">
+                                <li>ชื่อลูกค้าต้องไม่ซ้ำกับที่มีอยู่แล้วในระบบ</li>
+                                <li>ประเภทของลูกค้ามีอยู่ในฐานระบบ</li>
+                                <li>หากตรวจสอบเจอชื่อซ้ำในระบบ จะไม่นำเข้าข้อมูล</li>
+                                <li>เบอร์โทรศัพท์สามารถใส่ข้อความตามหลังได้</li>
+                                <li>หากไม่มีเบอร์โทรศัพท์ไม่จำเป็นต้องกรอก</li>
+                                <li>เบอร์โทรศัพท์ต้องมีอย่างน้อย 9-10 หลัก</li>
+                                <li>ใส่อำเภอและตำบลให้ถูกต้อง หากผิดพลาดจะไม่นำเข้าข้อูล</li>               
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="manual-page hidden" id="page5">
-                <h3 class="text-lg font-semibold">หน้าที่ 5: การกรองข้อมูล</h3>
-                <img src="../img/C3-4.png" alt="รูปภาพ" class="w-full max-w-xl mx-auto my-4 rounded-lg shadow">
-                <p class="text-gray-700">คำอธิบาย: การกรองข้อมูลลูกค้า สามารถใช้เพื่อค้นหาข้อมูลลูกค้าที่ต้องการ โดยมีดังนี้</p>
-                <ul class="list-disc list-inside text-gray-700 ml-4">
-                    <img src="../img/C3-5.png" alt="รูปภาพ" class="max-w-md mx-auto my-4 rounded-lg shadow">
-                    <li><strong>1.1.การค้นหาด้วยชื่อ : </strong>สามารถพิมพ์ชื่อหน่วยงานเพื่อใช้ในการค้นหา</li>
-                    <img src="../img/C3-6.png" alt="รูปภาพ" class="max-w-md mx-auto my-4 rounded-lg shadow">
-                    <li><strong>1.2.การค้นหาด้วยประเภท :</strong>เลือกประเภทของลูกค้าเพื่อกรองข้อมูลลูกค้าในประเภทนั้น</li>
-                    <img src="../img/C3-7.png" alt="รูปภาพ" class="max-w-md mx-auto my-4 rounded-lg shadow">
-                    <li><strong>1.3.การค้นหาด้วยอำเภอและตำบล : </strong>เลือกอำเภอและตำบลเพื่อกรองลูกค้าที่อยู่ในพื้นที่ดังกล่าว</li>
-                    <img src="../img/C3-8.png" alt="รูปภาพ" class="w-32 mx-auto my-4 rounded-lg shadow">
-                    <li><strong>1.4.ปุ่มรีเช็ต : </strong>ไว้สำหรับรีเช็ตข้อมูลลูกค้าที่ใช้กรอง</li>
-                </ul>
-                <p>ข้อควรระวัง</p>
-                <ul class="list-disc list-inside text-gray-700 ml-4">
-                    <li><strong>1.1. การกรองข้อมูลลูกค้าจะต้องใช้ข้อมูลที่ถูกต้องเท่านั้น</strong></li>
-                    <li><strong>1.2. หากไม่มีข้อมูลที่ตรงกับในระบบจะไม่แสดงข้อมูลใดๆ</strong></li>
-                </ul>
+            <!-- Page 5 -->
+            <div class="manual-page hidden" id="page4">
+                <div class="prose max-w-none">
+                    <h3 class="text-2xl font-bold text-blue-600 mb-2">หน้าที่ 5: การกรองข้อมูลลูกค้า</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                            ในหน้าการกรองข้อมูลลูกค้า สามารถกรองข้อมูลลูกค้าตามเงื่อนไขที่ต้องการได้ สามารถใช้เพื่อค้นหาข้อมูลลูกค้าที่ต้องการ โดยมีดังนี้
+                    </p>
+                    <img src="../img/C3-4.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-gray-700 text-xl font-bold mt-2">5.1.การค้นหาด้วยชื่อ : สามารถพิมพ์ชื่อหน่วยงานเพื่อใช้ในการค้นหา</p>
+                        <img src="../img/C3-5.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-xl font-bold mt-2">5.2.การค้นหาด้วยประเภท : เลือกประเภทของลูกค้าเพื่อกรองข้อมูลลูกค้าในประเภทนั้น</p>
+                        <img src="../img/C3-6.png" alt="การเพิ่มลูกค้า" class="w-1/2 rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-xl font-bold mt-2">5.3.การค้นหาด้วยอำเภอและตำบล : เลือกอำเภอและตำบลเพื่อกรองลูกค้าที่อยู่ในพื้นที่ดังกล่าว</p>
+                        <img src="../img/C3-7.png" alt="การเพิ่มลูกค้า" class="w-1/2 rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-xl font-bold mt-2">5.4.ปุ่มรีเช็ต : ไว้สำหรับรีเช็ตข้อมูลลูกค้าที่ใช้กรอง</p>
+                        <img src="../img/C3-8.png" alt="การเพิ่มลูกค้า" class="w-1/2 rounded-lg border border-gray-200 mb-4">
+                    </div>
+                    <div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+                            <h4 class="text-lg font-bold text-yellow-700 flex items-center">
+                                <svg class="w-6 h-6 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.766-1.36 2.72-1.36 3.486 0l6.518 11.57c.746 1.325-.187 2.981-1.743 2.981H3.482c-1.556 0-2.489-1.656-1.743-2.981l6.518-11.57zM11 14a1 1 0 11-2 0 1 1 0 012 0zm-1-2a1 1 0 001-1V7a1 1 0 00-2 0v4a1 1 0 001 1z" clip-rule="evenodd"></path>
+                                </svg>
+                                ข้อควรระวัง
+                            </h4>
+                            <ul class="list-disc pl-8 text-gray-700 mt-2">
+                                <li>การกรองข้อมูลลูกค้าจะต้องใช้ข้อมูลที่ถูกต้องเท่านั้น</li>
+                                <li>หากไม่มีข้อมูลที่ตรงกับในระบบจะไม่แสดงข้อมูลใดๆ</li>              
+                            </ul>
+                        </div>
+                </div>
             </div>
-
         </div>
 
-        <div class="flex justify-between items-center mt-6">
-            <button onclick="prevPage()" class="bg-gray-500 text-white px-4 py-2 rounded-md flex items-center">
-                <i class="fas fa-arrow-left mr-2"></i>
-            </button>
-            
-            <span id="pageNumber" class="text-lg font-semibold">1 / 5</span>
-            
-            <button onclick="nextPage()" class="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center">
-                <i class="fas fa-arrow-right ml-2"></i>
-            </button>
+        <!-- Navigation -->
+        <div class="border-t px-6 py-4 bg-gray-50">
+            <div class="flex justify-between items-center">
+                <button onclick="prevPage()" class="px-5 py-2.5 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 transition-colors flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    ก่อนหน้า
+                </button>
+                
+                <div class="flex items-center space-x-2">
+                    <span class="text-gray-600">หน้า</span>
+                    <span id="pageNumber" class="font-semibold text-blue-600 w-12 text-center">1 / 5</span>
+                </div>
+
+                <button onclick="nextPage()" class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors flex items-center">
+                    ถัดไป
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Custom scrollbar */
+    #manualModal ::-webkit-scrollbar {
+        width: 8px;
+    }
+    #manualModal ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    #manualModal ::-webkit-scrollbar-thumb {
+        background: #cbd5e0;
+        border-radius: 4px;
+    }
+    #manualModal ::-webkit-scrollbar-thumb:hover {
+        background: #a0aec0;
+    }
+
+    /* Warning box */
+    .warning-box {
+        @apply bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4;
+    }
+</style>
