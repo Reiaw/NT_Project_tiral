@@ -74,11 +74,6 @@ function deleteCustomerType($id_customer_type) {
 function createCustomer($data) {
     global $conn;
 
-    // ตรวจสอบว่าชื่อลูกค้ามีอยู่แล้วหรือไม่
-    if (checkCustomerName($data['name_customer'])) {
-        throw new Exception("ชื่อลูกค้ามีอยู่ในระบบแล้ว");
-    }
-
     // เพิ่มข้อมูลลูกค้า
     $sql = "INSERT INTO customers (name_customer, phone_customer, status_customer, id_address, create_at, update_at, id_customer_type) 
             VALUES (?, ?, ?, ?, NOW(), NOW(), ?)";

@@ -20,7 +20,7 @@ if (empty($name_customer) || empty($id_customer_type)  || empty($status_customer
 }
 
 // ตรวจสอบว่าเบอร์โทรศัพท์มีรูปแบบที่ถูกต้อง (สามารถใส่ชื่อได้)
-$phonePattern = '/^[0-9]{10}.*$/';
+$phonePattern = '/^(\d{3}-\d{3}-\d{4}|\d{9,10})(\s[a-zA-Zก-๙0-9]+)?$/u';
 // ตรวจสอบว่ามีการกรอกเบอร์โทรศัพท์หรือไม่
 if (!empty($phone_customer)) {
     if (!preg_match($phonePattern, $phone_customer)) {

@@ -7,7 +7,7 @@ $customerTypes = getCustomerTypes(); // ฟังก์ชันใหม่เ�
 <div id="customerModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
     <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
         <!-- เพิ่มปุ่มปิดที่มุมขวาบน -->
-        <button type="button" onclick="closeModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+        <button type="button" onclick="closeCustomerModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -93,7 +93,7 @@ $customerTypes = getCustomerTypes(); // ฟังก์ชันใหม่เ�
 
                 <!-- ปุ่มดำเนินการ -->
                 <div class="flex justify-end">
-                    <button type="button" onclick="closeModal()" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-gray-600 transition duration-300">ยกเลิก</button>
+                    <button type="button" onclick="closeCustomerModal()" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-gray-600 transition duration-300">ยกเลิก</button>
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">บันทึก</button>
                 </div>
                 <input type="hidden" name="id_address" id="id_address" value="">
@@ -123,7 +123,7 @@ function loadTambons(id_amphures) {
         }
     });
 }
-function closeModal() {
+function closeCustomerModal() {
     document.getElementById('customerModal').classList.add('hidden');
 }
 document.getElementById('customerForm').addEventListener('submit', function(e) {

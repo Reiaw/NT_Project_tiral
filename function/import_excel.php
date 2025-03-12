@@ -36,7 +36,7 @@ try {
 
     // วนลูปข้อมูลใน Excel
     foreach ($rows as $row) {
-        $name = $row[0]; // ชื่อลูกค้า (ไม่จำเป็นต้องกรอก)
+        $name = $row[0];
         $type = $row[1];
         $phone = $row[2];
         $status = $row[3];
@@ -45,16 +45,16 @@ try {
         $amphure = $row[6];
 
         // ตรวจสอบคอลัมน์ที่จำเป็นต้องมีค่า (ไม่เป็น null)
-        if (empty($type) || empty($phone) || empty($status) || empty($tambon) || empty($amphure)) {
+        if (empty($name) || empty($type) || empty($status) || empty($tambon) || empty($amphure)) {
             echo json_encode(['success' => false, 'message' => 'ข้อมูลที่จำเป็นหายไปในไฟล์ Excel']);
             exit;
         }
-
-        // ตรวจสอบรูปแบบเบอร์โทรศัพท์ (ต้องมีตัวเลข 9-10 หลัก)
-        if (!preg_match('/^\D*\d{9,10}\D*$/', $phone)) {
+        // ตรวจสอบเฉพาะเมื่อ phone ไม่เป็น null หรือว่าง
+        if (!empty($phone) && !preg_match('/^(\d{3}-\d{3}-\d{4}|\d{9,10})(\s[a-zA-Zก-๙0-9]+)?$/u', $phone)) {
             echo json_encode(['success' => false, 'message' => 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง เบอร์โทรต้องมี 9-10 หลัก']);
             exit;
         }
+
 
         // ตรวจสอบค่าของ status ต้องเป็น "ใช้งาน" หรือ "ไม่ได้ใช้งาน" เท่านั้น
         if ($status !== 'ใช้งาน' && $status !== 'ไม่ได้ใช้งาน') {
