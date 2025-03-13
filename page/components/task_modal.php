@@ -24,7 +24,7 @@
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="start_date">
                         วันที่เริ่ม
                     </label>
-                    <input type="date" name="start_date" id="start_date" required
+                    <input type="date" name="start_date" id="start_date" required min="<?= date('Y-m-d') ?>"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
 
@@ -40,10 +40,9 @@
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="reminder_date">
                         แจ้งเตือนก่อน (วัน)
                     </label>
-                    <input type="number" name="reminder_date" id="reminder_date"
+                    <input type="number" name="reminder_date" id="reminder_date" min="0"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
-
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2">
                         มอบหมายให้
@@ -80,4 +79,31 @@ function openTaskModal() {
 function closeTaskModal() {
     document.getElementById('taskModal').classList.add('hidden');
 }
+document.getElementById("taskForm").addEventListener("submit", function (event) {
+    const startDate = document.getElementById("start_date").value;
+    const endDate = document.getElementById("end_date").value;
+    const reminderDays = document.getElementById("reminder_date").value;
+
+    // ตรวจสอบวันที่เริ่มต้องไม่เป็นอดีต
+    const today = new Date().toISOString().split("T")[0];
+    if (startDate < today) {
+        alert("วันที่เริ่มต้นต้องเป็นวันนี้หรือวันถัดไป");
+        event.preventDefault();
+        return;
+    }
+
+    // ✅ อนุญาตให้ endDate เป็นวันเดียวกับ startDate ได้
+    if (startDate > endDate) {
+        alert("วันที่เริ่มต้นต้องน้อยกว่าหรือเท่ากับวันที่สิ้นสุด");
+        event.preventDefault();
+        return;
+    }
+
+    // ตรวจสอบว่าจำนวนวันแจ้งเตือนต้องเป็นค่าบวก
+    if (reminderDays < 0) {
+        alert("จำนวนวันแจ้งเตือนต้องเป็นค่าบวก");
+        event.preventDefault();
+        return;
+    }
+});
 </script>

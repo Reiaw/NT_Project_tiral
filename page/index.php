@@ -145,15 +145,14 @@ $limit = 3;
             <!-- Left Column -->
             <div class="col-span-1 lg:col-span-2">
                 <!-- Hero Section -->
-                <div class="bg-white text-black py-12 rounded-xl shadow-lg mb-6">
+                <div class="bg-white text-gray-800 py-12 rounded-xl shadow-lg mb-6">
                     <div class="container mx-auto px-4">
-                        <h1 class="text-3xl md:text-4xl font-bold mb-2">ยินดีต้อนรับ, <?php echo htmlspecialchars($_SESSION['name']); ?></h1>
-                        <p class="text-lg text-black-100">
-                            จัดการและติดตามงานทั้งหมดของคุณได้ในที่เดียว
+                        <h1 class="text-3xl md:text-4xl font-bold mb-4">ยินดีต้อนรับ, <?php echo htmlspecialchars($_SESSION['name']); ?></h1>
+                        <p class="text-lg text-gray-500 leading-relaxed font-light max-w-3xl">
+                            ยินดีต้อนรับสู่แดชบอร์ดของระบบจัดการลูกค้าและการเงิน แดชบอร์ดนี้ออกแบบมาเพื่อช่วยให้คุณสามารถติดตามข้อมูลสำคัญเกี่ยวกับลูกค้า บิล และงานต่างๆ ได้อย่างง่ายดาย คู่มือนี้จะแนะนำฟีเจอร์หลักและวิธีการใช้งานต่างๆ เพื่อให้คุณใช้งานระบบได้อย่างมีประสิทธิภาพสูงสุด
                         </p>
                     </div>
                 </div>
-
                 <!-- Charts Section -->
                 <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-yellow-400">
                     <?php include './components/charts.php'; ?>
