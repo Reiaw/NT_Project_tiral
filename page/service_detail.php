@@ -76,7 +76,12 @@ if ($id_service > 0) {
 </head>
 <body class="bg-gray-100">
     <?php include './components/navbar.php'; ?>
-
+    <?php include './components/service_detail_manual.php'; ?>
+    <!-- ปุ่มเปิดคู่มือ -->
+    <button id="manualButton" class="fixed right-4 top-20 bg-blue-500 text-white px-3 py-2 rounded-md z-50 flex items-center group transition-all duration-300 w-10 hover:w-24 overflow-hidden">
+        <i class="fas fa-question-circle text-xl"></i>
+        <span class="ml-2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">คู่มือ</span>
+    </button>
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold mb-4">รายละเอียดบริการ: <?php echo htmlspecialchars($service['code_service']); ?></h1>
 
@@ -391,6 +396,52 @@ if ($id_service > 0) {
                 });
             }
         }
+        // ฟังก์ชันเปิด modal สำหรับคู่มือ
+        function openManual() {
+            document.getElementById('manualModal').classList.remove('hidden');
+            currentPage = 0;
+            showPage(currentPage);
+        }
+
+        // ฟังก์ชันปิด modal สำหรับคู่มือ
+        function closeModal() {
+            document.getElementById('manualModal').classList.add('hidden');
+        }
+
+        // ฟังก์ชันแสดงหน้าที่เลือกในคู่มือ
+        let currentPage = 0;
+
+        function showPage(page) {
+            const pages = document.querySelectorAll('.manual-page');
+            pages.forEach((pageElem, index) => {
+                pageElem.classList.add('hidden'); // ซ่อนทุกหน้า
+                if (index === page) {
+                    pageElem.classList.remove('hidden'); // แสดงหน้า
+                }
+            });
+            // อัปเดตเลขหน้า
+            document.getElementById('pageNumber').textContent = `${page + 1} / ${pages.length}`;
+        }
+
+        // ฟังก์ชันสำหรับหน้าถัดไป
+        function nextPage() {
+            const pages = document.querySelectorAll('.manual-page');
+            if (currentPage < pages.length - 1) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        }
+
+        // ฟังก์ชันสำหรับหน้าก่อนหน้า
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        }
+
+        // เพิ่มการเปิด modal คู่มือเมื่อคลิกปุ่ม
+        document.getElementById('manualButton').addEventListener('click', openManual);
     </script>
 </body>
 </html>
