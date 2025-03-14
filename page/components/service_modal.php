@@ -8,7 +8,7 @@
                 <input type="hidden" id="id_bill" name="id_bill" value="<?php echo $id_bill; ?>">
                 <div class="mb-4">
                     <label for="code_service" class="block text-sm font-medium text-gray-700">รหัสบริการ</label>
-                    <input type="text" id="code_service" name="code_service" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                    <input type="text" id="code_service" name="code_service" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
                     <label for="type_service" class="block text-sm font-medium text-gray-700">ประเภทบริการ</label>
@@ -40,7 +40,7 @@
                     </select>
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" onclick="closeModal('service')" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">ยกเลิก</button>
+                    <button type="button" onclick="closeModalService('service')" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">ยกเลิก</button>
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">บันทึก</button>
                 </div>
             </form>

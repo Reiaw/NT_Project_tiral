@@ -1,138 +1,143 @@
 <?php
-// import_excel.php
-
 require_once '../config/config.php';
 require_once 'functions.php';
-
-// ตรวจสอบว่ามีไฟล์ถูกอัปโหลดหรือไม่ (สำหรับการนำเข้าข้อมูลจากไฟล์ Excel)
-if (!isset($_FILES['excelFile']) || $_FILES['excelFile']['error'] !== UPLOAD_ERR_OK) {
-    echo json_encode(['success' => false, 'message' => 'ไม่มีไฟล์ถูกอัปโหลดหรือเกิดข้อผิดพลาดในการอัปโหลดไฟล์']);
-    exit;
-}
-
-// เรียกใช้ไลบรารี PhpSpreadsheet
 require '../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
+// ตรวจสอบการอัปโหลดไฟล์
+if (!isset($_FILES['excelFile']) || $_FILES['excelFile']['error'] !== UPLOAD_ERR_OK) {
+    echo json_encode(['success' => false, 'message' => 'ไม่มีไฟล์ถูกอัปโหลดหรือเกิดข้อผิดพลาด']);
+    exit;
+}
+
+// ตรวจสอบการเชื่อมต่อฐานข้อมูล
+if (!$conn) {
+    echo json_encode(['success' => false, 'message' => 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้']);
+    exit;
+}
+
 $file = $_FILES['excelFile']['tmp_name'];
 
 try {
-    // อ่านไฟล์ Excel
     $spreadsheet = IOFactory::load($file);
     $sheet = $spreadsheet->getActiveSheet();
     $rows = $sheet->toArray();
 
-    // ตรวจสอบหัวคอลัมน์
-    $header = array_shift($rows);
-    $expectedHeader = [
-        'Name', 'Type', 'Phone', 'Status', 'Address', 'Tambon', 'Amphure'
-    ];
+    // ตรวจสอบคอลัมน์
+    $header = array_map('trim', array_shift($rows));
+    $expectedHeader = ['Name', 'Type', 'Phone', 'Status', 'Address', 'Tambon', 'Amphure'];
 
-    if ($header !== $expectedHeader) {
-        echo json_encode(['success' => false, 'message' => 'รูปแบบไฟล์ Excel ไม่ถูกต้อง']);
+    if (count($header) !== count($expectedHeader) || $header !== $expectedHeader) {
+        echo json_encode(['success' => false, 'message' => 'โครงสร้างไฟล์ Excel ไม่ถูกต้อง']);
         exit;
     }
 
-    // วนลูปข้อมูลใน Excel
-    foreach ($rows as $row) {
-        $name = $row[0];
-        $type = $row[1];
-        $phone = $row[2];
-        $status = $row[3];
-        $address = $row[4]; // info_address สามารถเป็น null ได้
-        $tambon = $row[5];
-        $amphure = $row[6];
+    $conn->begin_transaction();
 
-        // ตรวจสอบคอลัมน์ที่จำเป็นต้องมีค่า (ไม่เป็น null)
+    // ดึงข้อมูลที่จำเป็นเพื่อลดจำนวน query
+    $customerTypes = $conn->query("SELECT id_customer_type, type_customer FROM customer_types")->fetch_all(MYSQLI_ASSOC);
+    $amphures = $conn->query("SELECT id_amphures, name_amphures FROM amphures")->fetch_all(MYSQLI_ASSOC);
+    $tambons = $conn->query("SELECT id_tambons, name_tambons, id_amphures FROM tambons")->fetch_all(MYSQLI_ASSOC);
+
+    $customerTypeMap = array_column($customerTypes, 'id_customer_type', 'type_customer');
+    $amphureMap = array_column($amphures, 'id_amphures', 'name_amphures');
+    $tambonMap = [];
+    foreach ($tambons as $tambon) {
+        $tambonMap[$tambon['name_tambons']][$tambon['id_amphures']] = $tambon['id_tambons'];
+    }
+
+    // ตรวจสอบชื่อลูกค้าซ้ำในฐานข้อมูล
+    $existingCustomers = $conn->query("SELECT name_customer FROM customers")->fetch_all(MYSQLI_ASSOC);
+    $existingNames = array_column($existingCustomers, 'name_customer');
+
+    foreach ($rows as $row) {
+        list($name, $type, $phone, $status, $address, $tambon, $amphure) = array_map('trim', $row);
+
+        // ตรวจสอบค่าที่จำเป็น
         if (empty($name) || empty($type) || empty($status) || empty($tambon) || empty($amphure)) {
+            $conn->rollback();
             echo json_encode(['success' => false, 'message' => 'ข้อมูลที่จำเป็นหายไปในไฟล์ Excel']);
             exit;
         }
-        // ตรวจสอบเฉพาะเมื่อ phone ไม่เป็น null หรือว่าง
-        if (!empty($phone) && !preg_match('/^(\d{3}-\d{3}-\d{4}|\d{9,10})(\s[a-zA-Zก-๙0-9]+)?$/u', $phone)) {
-            echo json_encode(['success' => false, 'message' => 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง เบอร์โทรต้องมี 9-10 หลัก']);
-            exit;
-        }
 
-
-        // ตรวจสอบค่าของ status ต้องเป็น "ใช้งาน" หรือ "ไม่ได้ใช้งาน" เท่านั้น
-        if ($status !== 'ใช้งาน' && $status !== 'ไม่ได้ใช้งาน') {
-            echo json_encode(['success' => false, 'message' => 'ค่าสถานะไม่ถูกต้อง ต้องเป็น "ใช้งาน" หรือ "ไม่ได้ใช้งาน" เท่านั้น']);
-            exit;
-        }
-
-        // ตรวจสอบชื่อลูกค้าซ้ำ
-        $checkName = $conn->prepare("SELECT id_customer FROM customers WHERE name_customer = ?");
-        $checkName->bind_param("s", $name); // ผูกพารามิเตอร์ชื่อลูกค้า
-        $checkName->execute(); // ประมวลผลคำสั่ง SQL
-        $checkName->store_result(); // บันทึกผลลัพธ์
-
-        // ถ้าพบชื่อซ้ำ
-        if ($checkName->num_rows > 0) {
-            // ส่งข้อความแจ้งเตือนว่ามีข้อมูลซ้ำ
+        // ตรวจสอบชื่อซ้ำในฐานข้อมูล
+        if (in_array($name, $existingNames)) {
+            $conn->rollback();
             echo json_encode([
                 'success' => false,
-                'message' => 'ชื่อลูกค้าซ้ำกับข้อมูลที่มีอยู่ ไม่สามารถนำเข้าข้อมูลได้',
-                'duplicate' => true, // ส่งค่ากลับเพื่อระบุว่าพบข้อมูลซ้ำ
-                'name' => $name // ส่งชื่อลูกค้าที่ซ้ำกลับไปด้วย
+                'message' => 'ชื่อลูกค้าซ้ำ ไม่สามารถนำเข้าข้อมูลได้',
+                'duplicate' => true,
+                'name' => $name
             ]);
-            exit; // หยุดการทำงานและส่งข้อความกลับไปยังผู้ใช้
-        }
-
-        // ค้นหา id_customer_type จากประเภทลูกค้า
-        $customerTypeQuery = $conn->prepare("SELECT id_customer_type FROM customer_types WHERE type_customer = ?");
-        $customerTypeQuery->bind_param("s", $type);
-        $customerTypeQuery->execute();
-        $customerTypeResult = $customerTypeQuery->get_result();
-        $customerTypeData = $customerTypeResult->fetch_assoc();
-        $id_customer_type = $customerTypeData['id_customer_type'] ?? null;
-
-        // ถ้าไม่พบประเภทลูกค้าในฐานข้อมูล
-        if (!$id_customer_type) {
-            echo json_encode(['success' => false, 'message' => 'ประเภทลูกค้าไม่ถูกต้องในไฟล์ Excel']);
             exit;
         }
 
-        // ดึง id_amphures และ id_tambons จากชื่ออำเภอและตำบล
-        $amphureQuery = $conn->prepare("SELECT id_amphures FROM amphures WHERE name_amphures = ?");
-        $amphureQuery->bind_param("s", $amphure);
-        $amphureQuery->execute();
-        $amphureResult = $amphureQuery->get_result();
-        $amphureData = $amphureResult->fetch_assoc();
-        $id_amphures = $amphureData['id_amphures'] ?? null;
+        // ตรวจสอบประเภทลูกค้า
+        if (!isset($customerTypeMap[$type])) {
+            $conn->rollback();
+            echo json_encode(['success' => false, 'message' => 'ประเภทลูกค้าไม่ถูกต้อง']);
+            exit;
+        }
+        $id_customer_type = $customerTypeMap[$type];
 
-        if (!$id_amphures) {
-            echo json_encode(['success' => false, 'message' => 'อำเภอไม่ถูกต้องในไฟล์ Excel']);
+        // ตรวจสอบอำเภอ
+        if (!isset($amphureMap[$amphure])) {
+            $conn->rollback();
+            echo json_encode(['success' => false, 'message' => 'อำเภอไม่ถูกต้อง']);
+            exit;
+        }
+        $id_amphures = $amphureMap[$amphure];
+
+        // ตรวจสอบตำบล
+        if (!isset($tambonMap[$tambon][$id_amphures])) {
+            $conn->rollback();
+            echo json_encode(['success' => false, 'message' => 'ตำบลไม่ถูกต้อง']);
+            exit;
+        }
+        $id_tambons = $tambonMap[$tambon][$id_amphures];
+
+        // ตรวจสอบเบอร์โทรศัพท์
+        if (!empty($phone) && !preg_match('/^\d{9,10}$/', $phone)) {
+            $conn->rollback();
+            echo json_encode(['success' => false, 'message' => 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง']);
             exit;
         }
 
-        $tambonQuery = $conn->prepare("SELECT id_tambons FROM tambons WHERE name_tambons = ? AND id_amphures = ?");
-        $tambonQuery->bind_param("si", $tambon, $id_amphures);
-        $tambonQuery->execute();
-        $tambonResult = $tambonQuery->get_result();
-        $tambonData = $tambonResult->fetch_assoc();
-        $id_tambons = $tambonData['id_tambons'] ?? null;
-
-        if (!$id_tambons) {
-            echo json_encode(['success' => false, 'message' => 'ตำบลไม่ถูกต้องในไฟล์ Excel']);
+        // ตรวจสอบสถานะ
+        if (!in_array($status, ['ใช้งาน', 'ไม่ได้ใช้งาน'])) {
+            $conn->rollback();
+            echo json_encode(['success' => false, 'message' => 'ค่าสถานะต้องเป็น "ใช้งาน" หรือ "ไม่ได้ใช้งาน"']);
             exit;
         }
 
-        // เพิ่มข้อมูลลงในตาราง address
-        $addressQuery = $conn->prepare("INSERT INTO address (info_address, id_tambons, id_amphures) VALUES (?, ?, ?)");
-        $addressQuery->bind_param("sii", $address, $id_tambons, $id_amphures);
-        $addressQuery->execute();
+        // เพิ่มที่อยู่
+        $stmt = $conn->prepare("INSERT INTO address (info_address, id_tambons, id_amphures) VALUES (?, ?, ?)");
+        $stmt->bind_param("sii", $address, $id_tambons, $id_amphures);
+        if (!$stmt->execute()) {
+            $conn->rollback();
+            echo json_encode(['success' => false, 'message' => 'เกิดข้อผิดพลาดในการเพิ่มข้อมูลที่อยู่']);
+            exit;
+        }
         $id_address = $conn->insert_id;
 
-        // เพิ่มข้อมูลลงในตาราง customers รองรับ id_customer_type
-        $customerQuery = $conn->prepare("INSERT INTO customers (name_customer, phone_customer, status_customer, id_address, id_customer_type, create_at, update_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())");
-        $customerQuery->bind_param("sssii", $name, $phone, $status, $id_address, $id_customer_type);
-        $customerQuery->execute();
+        // เพิ่มลูกค้า
+        $stmt = $conn->prepare("INSERT INTO customers (name_customer, phone_customer, status_customer, id_address, id_customer_type, create_at, update_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt->bind_param("sssii", $name, $phone, $status, $id_address, $id_customer_type);
+        if (!$stmt->execute()) {
+            $conn->rollback();
+            echo json_encode(['success' => false, 'message' => 'เกิดข้อผิดพลาดในการเพิ่มข้อมูลลูกค้า']);
+            exit;
+        }
     }
 
+    $conn->commit();
     echo json_encode(['success' => true, 'message' => 'นำเข้าข้อมูลสำเร็จ']);
+
 } catch (Exception $e) {
+    if ($conn->in_transaction) {
+        $conn->rollback();
+    }
     echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
 }
 ?>

@@ -549,7 +549,7 @@ if ($id_bill > 0  ) {
             }
         }
 
-        function closeModal(type) {
+        function closeModalService(type) {
             const modalElement = document.getElementById(`${type}Modal`);
             modalElement.classList.add('hidden');
         }

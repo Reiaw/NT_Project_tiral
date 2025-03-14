@@ -41,7 +41,7 @@
 
                 <!-- ปุ่มยกเลิกและบันทึก (แสดงทั้งโหมดสร้างและแก้ไข) -->
                 <div class="flex justify-end">
-                    <button type="button" onclick="closeModal('gedget')" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">ยกเลิก</button>
+                    <button type="button" onclick="closeModalService('gedget')" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">ยกเลิก</button>
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">บันทึก</button>
                 </div>
             </form>

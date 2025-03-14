@@ -404,7 +404,7 @@ if ($id_service > 0) {
         }
 
         // ฟังก์ชันปิด modal สำหรับคู่มือ
-        function closeModal() {
+        function closeModalA() {
             document.getElementById('manualModal').classList.add('hidden');
         }
 

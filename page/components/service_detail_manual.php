@@ -3,7 +3,7 @@
         <!-- Header -->
         <div class="flex justify-between items-center px-6 py-4 border-b">
             <h2 class="text-2xl font-bold text-gray-800">คู่มือการใช้งานระบบ</h2>
-            <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 transition-colors">
+            <button onclick="closeModalA()" class="text-gray-500 hover:text-gray-700 transition-colors">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
