@@ -216,38 +216,73 @@ const chartConfigs = {
         data: {
             labels: <?= json_encode(array_column($billTypes, 'type_bill')) ?>,
             datasets: [{
-                data: <?= json_encode(array_column($billTypes, 'count')) ?>,
-                backgroundColor: balancedColorPalette.slice(0, <?= count($billTypes) ?>)
+                data: <?= json_encode(array_map('intval', array_column($billTypes, 'count'))) ?>,
+                backgroundColor: balancedColorPalette.slice(0, <?= count($billTypes) ?>),
+                borderColor: '#ffffff',  // เพิ่ม border สีขาวให้กราฟ
+                borderWidth: 2  // เพิ่มขนาด border
             }]
         },
         options: {
+            responsive: true,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 14,  // ขนาดตัวอักษรใน legend
+                            weight: 'bold'
+                        },
+                        padding: 20  // เพิ่มระยะห่างระหว่าง legend กับกราฟ
+                    }
                 },
                 datalabels: {
-                    color: '#fff',
-                    font: { size: 14 },
-                    formatter: (value) => value
+                    color: '#000000',
+                    font: { size: 14, weight: 'bold' },
+                    formatter: (value, context) => {
+                        // คำนวณเปอร์เซ็นต์จากจำนวนรวมทั้งหมด
+                        const total = context.dataset.data.reduce((acc, val) => acc + parseFloat(val), 0);
+                        const percentage = (value / total) * 100;
+
+                        // แสดงค่าเปอร์เซ็นต์และ total
+                        return `${percentage.toFixed(2)} %`;  // แสดงเปอร์เซ็นต์และ total
+                    },
+
+                    anchor: 'center',
+                    align: 'center'
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',  // สีพื้นหลังของ tooltip
+                    titleColor: '#fff',  // สีของ title ใน tooltip
+                    bodyColor: '#fff',  // สีของข้อความใน tooltip
+                    bodyFont: { size: 14 },
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + ' รายการ';
+                        }
+                    }
                 }
+            },
+            hover: {
+                mode: 'index',
+                animationDuration: 400
             }
         }
     },
     billStatusChart: {
         type: 'bar',
         data: {
-            labels: ["สถานะบิล"], // ใช้ label กลางเดียวกัน
+            labels: ["สถานะบิล"], // ใช้ label เดียวกัน
             datasets: [
                 {
                     label: "ใช้งาน",
-                    data: [<?= $activeCount ?>], // ใช้งาน
+                    data: [<?= $activeCount ?>], // จำนวนบิลใช้งาน
                     backgroundColor: balancedColorPalette[4],
                     borderColor: '#1D4ED8',
                     borderWidth: 1
                 },
                 {
                     label: "ไม่ใช้งาน",
-                    data: [<?= $inactiveCount ?>], // ไม่ใช้งาน
+                    data: [<?= $inactiveCount ?>], // จำนวนบิลไม่ใช้งาน
                     backgroundColor: balancedColorPalette[1],
                     borderColor: '#DC2626',
                     borderWidth: 1
@@ -257,16 +292,27 @@ const chartConfigs = {
         options: {
             responsive: true,
             scales: {
-                y: { beginAtZero: true, title: { display: true, text: 'จำนวนบิล' }, ticks: { precision: 0 } },
+                y: { 
+                    beginAtZero: true, 
+                    title: { display: true, text: 'จำนวนบิล' }, 
+                    ticks: { precision: 0 } 
+                }
             },
             plugins: {
-                legend: { display: true }, // เปิด Legend เพื่อให้เห็น "ใช้งาน" กับ "ไม่ใช้งาน"
+                legend: { display: true }, // แสดง legend 
                 datalabels: { 
                     anchor: 'end', 
                     align: 'top', 
                     color: '#000', 
                     font: { size: 12 },
-                    formatter: (value) => value // แสดงค่าเลขปกติ
+                    formatter: (value, context) => {
+                        // หาค่าทั้งหมดของบิล
+                        const total = <?= $activeCount + $inactiveCount ?>;
+                        const percentage = ((value / total) * 100).toFixed(1); // คำนวณ %
+                        
+                        // แสดงค่าแบบ "จำนวน (เปอร์เซ็นต์%)"
+                        return `${value} (${percentage}%)`;
+                    }
                 }
             }
         }
@@ -276,20 +322,55 @@ const chartConfigs = {
         data: {
             labels: <?= json_encode(array_column($customerTypes, 'type_customer')) ?>,
             datasets: [{
-                data: <?= json_encode(array_column($customerTypes, 'count')) ?>,
-                backgroundColor: balancedColorPalette.slice(4, 4 + <?= count($customerTypes) ?>)
+                data: <?= json_encode(array_map('intval', array_column($customerTypes, 'count'))) ?>,
+                backgroundColor: balancedColorPalette.slice(4, 4 + <?= count($customerTypes) ?>),
+                borderColor: '#ffffff',  // เพิ่ม border สีขาวให้กราฟ
+                borderWidth: 2  // เพิ่มขนาด border
             }]
         },
         options: {
+            responsive: true,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 14,  // ขนาดตัวอักษรใน legend
+                            weight: 'bold'
+                        },
+                        padding: 20  // เพิ่มระยะห่างระหว่าง legend กับกราฟ
+                    }
                 },
                 datalabels: {
-                    color: '#fff',
-                    font: { size: 14 },
-                    formatter: (value) => value
+                    color: '#000000',
+                    font: { size: 14, weight: 'bold' },
+                    formatter: (value, context) => {
+                        // คำนวณเปอร์เซ็นต์จากจำนวนรวมทั้งหมด
+                        const total = context.dataset.data.reduce((acc, val) => acc + parseFloat(val), 0);
+                        const percentage = (value / total) * 100;
+
+                        // แสดงค่าเปอร์เซ็นต์และ total
+                        return `${percentage.toFixed(2)} %`;  // แสดงเปอร์เซ็นต์และ total
+                    },
+
+                    anchor: 'center',
+                    align: 'center'
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',  // สีพื้นหลังของ tooltip
+                    titleColor: '#fff',  // สีของ title ใน tooltip
+                    bodyColor: '#fff',  // สีของข้อความใน tooltip
+                    bodyFont: { size: 14 },
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + ' คน';
+                        }
+                    }
                 }
+            },
+            hover: {
+                mode: 'index',
+                animationDuration: 400
             }
         }
     },
@@ -373,20 +454,55 @@ const chartConfigs = {
         data: {
             labels: <?= json_encode(array_column($serviceTypes, 'type_service')) ?>,
             datasets: [{
-                data: <?= json_encode(array_column($serviceTypes, 'count')) ?>,
-                backgroundColor: balancedColorPalette.slice(6, 6 + <?= count($serviceTypes) ?>)
+                data: <?= json_encode(array_map('intval', array_column($serviceTypes, 'count'))) ?>,
+                backgroundColor: balancedColorPalette.slice(6, 6 + <?= count($serviceTypes) ?>),
+                borderColor: '#ffffff',  // เพิ่ม border สีขาวให้กราฟ
+                borderWidth: 2  // เพิ่มขนาด border
             }]
         },
         options: {
+            responsive: true,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 14,  // ขนาดตัวอักษรใน legend
+                            weight: 'bold'
+                        },
+                        padding: 20  // เพิ่มระยะห่างระหว่าง legend กับกราฟ
+                    }
                 },
                 datalabels: {
-                    color: '#fff', 
-                    font: { size: 14 },
-                    formatter: (value) => value
+                    color: '#000000',
+                    font: { size: 14, weight: 'bold' },
+                    formatter: (value, context) => {
+                        // คำนวณเปอร์เซ็นต์จากจำนวนรวมทั้งหมด
+                        const total = context.dataset.data.reduce((acc, val) => acc + parseFloat(val), 0);
+                        const percentage = (value / total) * 100;
+
+                        // แสดงค่าเปอร์เซ็นต์และ total
+                        return `${percentage.toFixed(2)} %`;  // แสดงเปอร์เซ็นต์และ total
+                    },
+
+                    anchor: 'center',
+                    align: 'center'
+                },  
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',  // สีพื้นหลังของ tooltip
+                    titleColor: '#fff',  // สีของ title ใน tooltip
+                    bodyColor: '#fff',  // สีของข้อความใน tooltip
+                    bodyFont: { size: 14 },
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + ' รายการ';
+                        }
+                    }
                 }
+            },
+            hover: {
+                mode: 'index',
+                animationDuration: 400
             }
         }
     },
@@ -418,9 +534,7 @@ const chartConfigs = {
                 },
                 y: {
                     stacked: false, // ปรับให้ไม่ซ้อนกัน
-                    title: { 
-                        display: false
-                    }
+                    title: { display: false }
                 }
             },
             plugins: {
@@ -439,7 +553,12 @@ const chartConfigs = {
                         size: 12, 
                         weight: 'bold' 
                     },
-                    formatter: (value) => value > 0 ? value : '',
+                    formatter: (value, context) => {
+                        const total = Object.values(<?= json_encode($formattedData) ?>).reduce((acc, val) => acc + val, 0);
+                        const percentage = ((value / total) * 100).toFixed(1); // คำนวณเปอร์เซ็นต์
+
+                        return `${value} (${percentage}%)`; // แสดงทั้งจำนวนและเปอร์เซ็นต์
+                    },
                     offset: 0
                 },
                 tooltip: {
@@ -448,13 +567,17 @@ const chartConfigs = {
                             return tooltipItems[0].dataset.label;
                         },
                         label: function(context) {
-                            return 'จำนวน: ' + context.parsed.x + ' เครื่อง';
+                            const total = Object.values(<?= json_encode($formattedData) ?>).reduce((acc, val) => acc + val, 0);
+                            const percentage = ((context.parsed.x / total) * 100).toFixed(1);
+
+                            return `จำนวน: ${context.parsed.x} เครื่อง (${percentage}%)`;
                         }
                     }
                 }
             }
         }
     },
+
 
 };
 const chartInstances = {};
