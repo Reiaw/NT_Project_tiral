@@ -400,30 +400,49 @@ $bills = $result->fetch_all(MYSQLI_ASSOC);
         });
     });;
 
+    // ฟังก์ชันเพื่อเคลียร์ข้อมูลในฟอร์ม
+    function clearModalFields() {
+        document.getElementById('id_bill').value = '';
+        document.getElementById('id_customer').value = '';
+        document.getElementById('number_bill').value = '';
+        document.getElementById('type_bill').value = '';
+        document.getElementById('status_bill').value = '';
+        document.getElementById('create_at').value = '';
+        document.getElementById('date_count').value = '';
+    }
+
+    // ฟังก์ชันเปิด modal สำหรับแก้ไขบิล
     function openEditBillModal(id_bill) {
-    // ดึงข้อมูลบิลจากเซิร์ฟเวอร์
-    fetch(`../function/get_bill.php?id_bill=${id_bill}`)
-        .then(response => response.json())
-        .then(data => {
-            // เติมข้อมูลลงในฟอร์ม
-            document.getElementById('id_bill').value = data.id_bill;
-            document.getElementById('id_customer').value = data.id_customer;
-            document.getElementById('number_bill').value = data.number_bill;
-            document.getElementById('type_bill').value = data.type_bill;
-            document.getElementById('status_bill').value = data.status_bill;
-            document.getElementById('create_at').value = data.create_at.split(' ')[0]; // เอาเฉพาะวันที่
-            document.getElementById('date_count').value = data.date_count;
+        // ดึงข้อมูลบิลจากเซิร์ฟเวอร์
+        fetch(`../function/get_bill.php?id_bill=${id_bill}`)
+            .then(response => response.json())
+            .then(data => {
+                // เติมข้อมูลลงในฟอร์ม
+                document.getElementById('id_bill').value = data.id_bill;
+                document.getElementById('id_customer').value = data.id_customer;
+                document.getElementById('number_bill').value = data.number_bill;
+                document.getElementById('type_bill').value = data.type_bill;
+                document.getElementById('status_bill').value = data.status_bill;
+                document.getElementById('create_at').value = data.create_at.split(' ')[0]; // เอาเฉพาะวันที่
+                document.getElementById('date_count').value = data.date_count;
 
-            // เปลี่ยนหัวข้อ Modal และปุ่ม
-            document.querySelector('#createBillModal h3').textContent = "แก้ไขบิล";
-            document.getElementById('createBillButton').classList.add('hidden');
-            document.getElementById('updateBillButton').classList.remove('hidden');
+                // เปลี่ยนหัวข้อ Modal และปุ่ม
+                document.querySelector('#createBillModal h3').textContent = "แก้ไขบิล";
+                document.getElementById('createBillButton').classList.add('hidden');
+                document.getElementById('updateBillButton').classList.remove('hidden');
 
-            // แสดง Modal
-            document.getElementById('createBillModal').classList.remove('hidden');
-        })
-        .catch(error => console.error('Error:', error));
-}
+                // แสดง Modal
+                document.getElementById('createBillModal').classList.remove('hidden');
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // ฟังก์ชันปิด modal และลบข้อมูลในฟอร์ม
+    function closeCreateBillModal() {
+        document.getElementById('createBillModal').classList.add('hidden');
+        clearModalFields(); // เคลียร์ข้อมูลที่โหลด
+    }
+
   
     function removeServiceField(button) {
         const serviceDiv = button.parentElement;

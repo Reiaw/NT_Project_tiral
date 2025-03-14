@@ -108,8 +108,4 @@
         document.getElementById('createBillButton').classList.remove('hidden');
         document.getElementById('updateBillButton').classList.add('hidden');
     }
-
-    function closeCreateBillModal() {
-        document.getElementById('createBillModal').classList.add('hidden');
-    }
 </script>

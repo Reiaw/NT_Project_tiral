@@ -155,6 +155,11 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-gray-700 text-xl font-bold mt-2">2.4. การเข้าถึงบิลลูกค้าเฉพาะ คลิกที่บิล (ไอคอนสีฟ้า)</p>
+                        <img src="../img/customer/C1-6-1.png" alt="การเพิ่มลูกค้า" class="w-1/2 mx-auto rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-gl leading-relaxed">เป็นการเข้าถึงบิลทั้งหมดของลูกค้าคนนั้น รายละเอียดอธิบายต่อในคู่มือที่หน้า Bill</p>
+                    </div>
                 </div>
             </div>
             <!-- Page 3 -->

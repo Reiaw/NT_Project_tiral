@@ -78,6 +78,7 @@ try {
             
             $validTypes = ['CIP+', 'Special Bill', 'Nt1'];
             $validStatuses = ['ใช้งาน', 'ยกเลิกใช้งาน'];
+            $validStatusesG = ['ใช้งาน', 'ยกเลิก'];
             
             // Process Bills
             $billMap = []; // เก็บความสัมพันธ์ระหว่าง number_bill และ id_bill เพื่อใช้สำหรับ services
@@ -243,7 +244,7 @@ try {
                         // ตรวจสอบหัวคอลัมน์สำหรับ Package
                         $packageHeader = array_shift($packageRows);
                         $expectedPackageHeader = ['Code', 'Package Name', 'Package Detail', 'Status Package','Product Name', 'Product Detail', 
-                        'Status product', 'Main Package', 'ICT', 'override Detail', 'Start'];
+                        'Status Product', 'Main Package', 'ICT', 'override Detail', 'Start'];
                         
                         if ($packageHeader !== $expectedPackageHeader) {
                             throw new Exception('รูปแบบ Sheet "Package" ไม่ถูกต้อง');
@@ -454,7 +455,8 @@ try {
                 
                 // ตรวจสอบหัวคอลัมน์สำหรับ Gadget
                 $gadgetHeader = array_shift($gadgetRows);
-                $expectedGadgetHeader = ['Number', 'Name Device', 'Start', 'Detail'];
+                $expectedGadgetHeader = ['Number', 'Name Device', 'Start', 'Detail', 'Status'];
+
                 
                 if ($gadgetHeader !== $expectedGadgetHeader) {
                     throw new Exception('รูปแบบ Sheet "Gedget" ไม่ถูกต้อง');
@@ -470,6 +472,13 @@ try {
                     $name_gadget = trim($row[1]);
                     $create_at = trim($row[2]);
                     $note = isset($row[3]) ? trim($row[3]) : null;
+                    $status = isset($row[4]);
+
+                    // ตรวจสถานะ
+                    if (!in_array($status, $validStatusesG)) {
+                        $errors[] = "สถานะอุปกรณ์ $status ไม่ถูกต้อง";
+                        continue;
+                    }
                     
                     // ตรวจสอบว่ามีหมายเลขบิลใน billMap หรือไม่
                     if (!isset($billMap[$bill_number])) {
@@ -493,18 +502,20 @@ try {
                     
                     if ($result->num_rows > 0) {
                         // หากมีอยู่แล้ว ให้อัปเดตข้อมูล
-                        $updateGadget = "UPDATE gedget SET create_at = ?, note = ? WHERE name_gedget = ? AND id_bill = ?";
+                        $updateGadget = "UPDATE gedget SET create_at = ?, note = ?, status_gedget = ? WHERE name_gedget = ? AND id_bill = ?";
                         $stmt = $conn->prepare($updateGadget);
-                        $stmt->bind_param("sssi", $create_at, $note, $name_gadget, $id_bill);
+                        $stmt->bind_param("ssssi", $create_at, $note, $status, $name_gadget, $id_bill);
+
                         if ($stmt->execute()) {
                             $gadgetUpdatedCount++;
                         }
                     } else {
                         // เพิ่มข้อมูลอุปกรณ์ใหม่
-                        $insertGadget = "INSERT INTO gedget (name_gedget, id_bill, create_at, note) 
-                            VALUES (?, ?, ?, ?)";
+                        $insertGadget = "INSERT INTO gedget (name_gedget, id_bill, create_at, note, status_gedget) 
+                        VALUES (?, ?, ?, ?, ?)";
                         $stmt = $conn->prepare($insertGadget);
-                        $stmt->bind_param("siss", $name_gadget, $id_bill, $create_at, $note);
+                        $stmt->bind_param("sisss", $name_gadget, $id_bill, $create_at, $note, $status);
+
                         if ($stmt->execute()) {
                             $gadgetSuccessCount++;
                         }
