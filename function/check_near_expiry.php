@@ -21,6 +21,22 @@ function checkNearExpiry($conn, $user_id) {
         $stmt_delete_old = $conn->prepare($sql_delete_old);
         $stmt_delete_old->execute();
 
+         // Delete notifications for expired contracts (end date is in the past)
+         $sql_delete_expired = "DELETE n FROM notifications n 
+                INNER JOIN bill_customer bc ON n.id_bill = bc.id_bill
+                WHERE bc.end_date < CURDATE() 
+                AND n.id_user = ?";
+        $stmt_delete_expired = $conn->prepare($sql_delete_expired);
+        $stmt_delete_expired->bind_param("i", $user_id);
+        $stmt_delete_expired->execute();
+
+        // Update expired bills to inactive status
+        $sql_update_expired = "UPDATE bill_customer 
+                              SET status_bill = 'ยกเลิกใช้งาน' 
+                              WHERE end_date < CURDATE() 
+                              AND status_bill = 'ใช้งาน'";
+        $stmt_update_expired = $conn->prepare($sql_update_expired);
+        $stmt_update_expired->execute();
         // Get near expiry contracts
         $sql = "SELECT COUNT(*) as near_expiry_count
                 FROM bill_customer bc
