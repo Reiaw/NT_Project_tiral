@@ -25,14 +25,13 @@ try {
     $rows = $sheet->toArray();
 
     // ตรวจสอบคอลัมน์
-    $header = array_map('trim', array_shift($rows));
-    $expectedHeader = ['Name', 'Type', 'Phone', 'Status', 'Address', 'Tambon', 'Amphure'];
+    $header = array_map(fn($col) => strtolower(trim(preg_replace('/\s+/', ' ', $col))), array_shift($rows));
+    $expectedHeader = ['name', 'type', 'phone', 'status', 'address', 'tambon', 'amphure'];
 
     if (count($header) !== count($expectedHeader) || $header !== $expectedHeader) {
         echo json_encode(['success' => false, 'message' => 'โครงสร้างไฟล์ Excel ไม่ถูกต้อง']);
         exit;
     }
-
     $conn->begin_transaction();
 
     // ดึงข้อมูลที่จำเป็นเพื่อลดจำนวน query
@@ -53,7 +52,7 @@ try {
 
     foreach ($rows as $row) {
         list($name, $type, $phone, $status, $address, $tambon, $amphure) = array_map('trim', $row);
-
+ 
         // ตรวจสอบค่าที่จำเป็น
         if (empty($name) || empty($type) || empty($status) || empty($tambon) || empty($amphure)) {
             $conn->rollback();
@@ -98,11 +97,12 @@ try {
         $id_tambons = $tambonMap[$tambon][$id_amphures];
 
         // ตรวจสอบเบอร์โทรศัพท์
-        if (!empty($phone) && !preg_match('/^\d{9,10}$/', $phone)) {
+        if (!empty($phone) && !preg_match('/^(\d{3}-\d{3}-\d{4}|\d{3}-\d{7}|\d{9,10})(\s[a-zA-Zก-๙0-9.]+)?$/u', $phone)) {
             $conn->rollback();
             echo json_encode(['success' => false, 'message' => 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง']);
             exit;
         }
+        
 
         // ตรวจสอบสถานะ
         if (!in_array($status, ['ใช้งาน', 'ไม่ได้ใช้งาน'])) {
@@ -135,9 +135,9 @@ try {
     echo json_encode(['success' => true, 'message' => 'นำเข้าข้อมูลสำเร็จ']);
 
 } catch (Exception $e) {
-    if ($conn->in_transaction) {
+    if (!$conn->autocommit(true)) { 
         $conn->rollback();
-    }
+    }    
     echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
 }
 ?>

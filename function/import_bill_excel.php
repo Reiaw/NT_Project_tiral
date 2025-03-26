@@ -70,11 +70,16 @@ try {
             
             // ตรวจสอบหัวคอลัมน์สำหรับ Bills
             $billHeader = array_shift($billRows);
-            $expectedBillHeader = ['Number', 'Type', 'Status', 'Start', 'Contact(Month)'];
-            
+            $expectedBillHeader = ['number', 'type', 'status', 'start', 'contact(month)']; // ใช้พิมพ์เล็ก
+
+            // ตัดช่องว่างและแปลงเป็นพิมพ์เล็ก
+            $billHeader = array_map('strtolower', array_map('trim', $billHeader));
+            $expectedBillHeader = array_map('strtolower', $expectedBillHeader);
+
             if ($billHeader !== $expectedBillHeader) {
                 throw new Exception('รูปแบบ Sheet "Bills" ไม่ถูกต้อง');
             }
+
             
             $validTypes = ['CIP+', 'Special Bill', 'Nt1'];
             $validStatuses = ['ใช้งาน', 'ยกเลิกใช้งาน'];
@@ -154,7 +159,11 @@ try {
                 
                 // ตรวจสอบหัวคอลัมน์สำหรับ Services
                 $serviceHeader = array_shift($serviceRows);
-                $expectedServiceHeader = ['Number', 'Code', 'Type', 'Gadget', 'Status', 'Start'];
+                $expectedServiceHeader = ['number', 'code', 'type', 'gadget', 'status', 'start']; // เปลี่ยนชื่อคอลัมน์ให้เป็นพิมพ์เล็ก
+                
+                // ตัดช่องว่างและแปลงเป็นพิมพ์เล็ก
+                $serviceHeader = array_map('strtolower', array_map('trim', $serviceHeader));
+                $expectedServiceHeader = array_map('strtolower', $expectedServiceHeader);
                 
                 if ($serviceHeader !== $expectedServiceHeader) {
                     throw new Exception('รูปแบบ Sheet "Services" ไม่ถูกต้อง');
@@ -243,8 +252,11 @@ try {
                         
                         // ตรวจสอบหัวคอลัมน์สำหรับ Package
                         $packageHeader = array_shift($packageRows);
-                        $expectedPackageHeader = ['Code', 'Package Name', 'Package Detail', 'Status Package','Product Name', 'Product Detail', 
-                        'Status Product', 'Main Package', 'ICT', 'override Detail', 'Start'];
+                        $expectedPackageHeader = ['code', 'package name', 'package detail', 'status package', 'product name', 'product detail', 'status product', 'main package', 'ict', 'override detail', 'start']; // เปลี่ยนชื่อคอลัมน์ให้เป็นพิมพ์เล็ก
+                        
+                        // ตัดช่องว่างและแปลงเป็นพิมพ์เล็ก
+                        $packageHeader = array_map('strtolower', array_map('trim', $packageHeader));
+                        $expectedPackageHeader = array_map('strtolower', $expectedPackageHeader);
                         
                         if ($packageHeader !== $expectedPackageHeader) {
                             throw new Exception('รูปแบบ Sheet "Package" ไม่ถูกต้อง');
@@ -447,7 +459,6 @@ try {
                     }           
                 }
             }
-            
             // อ่าน Sheet ของ Gadget (ถ้ามี)
             $gadgetSheet = $spreadsheet->getSheetByName('Gedget');
             if ($gadgetSheet) {
@@ -455,8 +466,11 @@ try {
                 
                 // ตรวจสอบหัวคอลัมน์สำหรับ Gadget
                 $gadgetHeader = array_shift($gadgetRows);
-                $expectedGadgetHeader = ['Number', 'Name Device', 'Start', 'Detail', 'Status'];
-
+                $expectedGadgetHeader = ['number', 'name device', 'start', 'detail', 'status']; // เปลี่ยนชื่อคอลัมน์ให้เป็นพิมพ์เล็ก
+                
+                // ตัดช่องว่างและแปลงเป็นพิมพ์เล็ก
+                $gadgetHeader = array_map('strtolower', array_map('trim', $gadgetHeader));
+                $expectedGadgetHeader = array_map('strtolower', $expectedGadgetHeader);
                 
                 if ($gadgetHeader !== $expectedGadgetHeader) {
                     throw new Exception('รูปแบบ Sheet "Gedget" ไม่ถูกต้อง');
