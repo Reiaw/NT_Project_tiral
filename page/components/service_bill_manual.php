@@ -18,25 +18,45 @@
                     <div class="prose max-w-none">
                         <h3 class="text-2xl font-bold text-blue-600 mb-4">หน้าที่ 1: ภาพรวมของระบบ</h3>
                         <p class="text-gray-700 text-gl leading-relaxed">
-                        ระบบรายงานนี้ออกแบบมาเพื่อช่วยให้คุณสามารถดูข้อมูลลูกค้า บิล และอุปกรณ์ได้อย่างมีประสิทธิภาพ คู่มือนี้จะอธิบายวิธีการใช้งานฟังก์ชันต่างๆ บนหน้ารายงาน
+                        ในหน้ารายละเอียดของบิล พนักงานสามารถเพิ่มข้อมูลหมายเลขบริการ อุปกรณ์ และสร้างกลุ่มอุปกรณ์ไว้จัดเก็บให้เป็นระเบียบได้
                         </p>
                         <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                            <img src="../img/report/R0-1.png" alt="ภาพรวมระบบ" class="w-full rounded-lg border border-gray-200 mb-4">
+                            <img src="../img/service_bill/SB0.png" alt="ภาพรวมระบบ" class="w-full rounded-lg border border-gray-200 mb-4">
                             
                             <div class="grid md:grid-cols-1 gap-4">
                                 <div class="bg-white p-4 rounded-lg border border-gray-200">
                                     <h4 class="font-semibold text-gray-800 mb-2">ส่วนประกอบหลัก:</h4>
                                     <ul class="list-disc pl-5 ">
-                                        <li><strong>การเลือกประเภทรายงาน:</strong> แบ่งเป็น 3 รายงานหลัก</li>
+                                        <li><strong>การเพิ่มข้อมูลหมายเลขบริการของบิลที่เลือกไว้</strong>
                                             <ul class="list-disc pl-5 ">
-                                                <li>ลูกค้าและจำนวนบิลทั้งหมด</li>
-                                                <li>ลูกค้าและหมายเลขบิลที่เกี่ยวข้อง</li>
-                                                <li>ลูกค้าและอุปกรณ์ที่เกี่ยวข้อง</li>
+                                                <li>พนักงานเพิ่มข้อมูลหมายเลขบริการและเลือกประเภทบริการ ประเภทอุปกรณ์ และสถานะของหมายเลขบริการ</li>
                                             </ul>
-                                        <li><strong>การกรองข้อมูลตามเงื่อนไขต่างๆ:</strong> โดยตัวกรองจะมีรายละเอียดตามข้อรายงาน</li>
-                                        <li><strong>การส่งออกข้อมูลเป็นไฟล์ Excel:</strong> หลังจากเลือกแลกรองข้อมูลที่ต้องการสามารกดนำออกมาเป็ฯรไฟล์ Excel ได้</li>
-                                    </ul>
+                                        <li><strong>การเพิ่มข้อมูลอุปกรณ์</strong> 
+                                        <ul class="list-disc pl-5 ">
+                                            <li>พนักงานเพิ่มข้อมูลอุปกรณ์ จำนวนอุปกรณ์ และสามารถลงวันที่ติดตั้งของอุปกรณ์ได้</li>
+                                        </ul>
+                                        <li><strong>การสร้างกลุ่มอุปกรณ์</strong> 
+                                        <ul class="list-disc pl-5 ">
+                                            <li>พนักงานจัดการสร้างอุปกรณ์โดยสามารถเลือกเฉพาะอุปกรณ์ที่ต้องจัดกลุ่มหรือจะเลือกทั้งหมดก็ได้</li>
+                                        </ul>
                                 </div>
+                                <img src="../img/service_bill/SB1.png" alt="ภาพการลบข้อมูลหมมายเลขบริการ" class="w-full rounded-lg border border-gray-200 mb-4">
+                                <img src="../img/service_bill/SB2.png" alt="ภาพการลบข้อมูลบิล" class="w-full rounded-lg border border-gray-200 mb-4">
+                                <!-- เพิ่ม div ข้อควรระวังที่นี่ -->
+                            <div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+                                <h4 class="text-lg font-bold text-yellow-700 flex items-center">
+                                    <svg class="w-6 h-6 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.766-1.36 2.72-1.36 3.486 0l6.518 11.57c.746 1.325-.187 2.981-1.743 2.981H3.482c-1.556 0-2.489-1.656-1.743-2.981l6.518-11.57zM11 14a1 1 0 11-2 0 1 1 0 012 0zm-1-2a1 1 0 001-1V7a1 1 0 00-2 0v4a1 1 0 001 1z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    ข้อควรระวัง
+                                </h4>
+                                <ul class="list-disc pl-8 text-gray-700 mt-2">
+                                    <li>ข้อมูลหมายเลขบริการที่ลบได้จะต้องเป็นข้อมูลที่ไม่มีข้อมูลรายละเอียดแพ็กเกจ</li>
+                                    <li>หากอยากลบข้อมูลแต่ไม่สามารถลบได้เหมือนได้รูปให้พนักงานกลับไปลบข้อมูลในหน้าแพ็กเกจให้เสร็จสิ้นก่อน</li>
+                                    <li>หากอยากลบข้อมูลอุปกรณ์ที่ต้องการแต่ได้สร้างกลุ่มอุปกรณ์ตัวนั้นแล้วจะไม่สามารถลบได้</li>
+                                    <li>ดังนั้นถ้าต้องการลบอุปกรณ์ให้ตรวจเช็คในหน้าการสร้างกลุ่มอุปกรณ์ก่อน หากพบเจอให้พนักงานทำการลบอุปกรณ์ในการสร้างกลุ่มให้เรียบร้อยก่อนแล้วค่อยกลับไปลบอุปกรณ์ที่หน้าการเพิ่มอุปกรณ์อีกครั้ง</li>
+                                </ul>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -44,116 +64,29 @@
             </div>
             <!-- Page 2 -->
             <div class="manual-page block" id="page2">
-                <div class="prose max-w-none">
-                    <h3 class="text-2xl font-bold text-blue-600 mb-4">หน้าที่ 2: รายงานที่ 1 ลูกค้าและจำนวนบิลทั้งหมด</h3>
-                    <img src="../img/report/R1-1.png" alt="ภาพรวมระบบ" class="w-full rounded-lg border border-gray-200 mb-4">
-                    <div class="grid md:grid-cols-1 gap-4">
-                        <div class="bg-white p-4 rounded-lg border border-gray-200">
-                            <h4 class="font-semibold text-gray-800 mb-2">รายละเอียด :</h4>
-                            <ul class="list-disc pl-5 ">
-                                <li>แสดงข้อมูลลูกค้า ที่อยู่ จำนวนบิลทั้งหมด</li>
-                                <li>แสดงมูลค่ารวมของราคาแพ็คเกจหลัก ราคา ICT และราคารวมทั้งหมด</li>
-                                <li>เหมาะสำหรับการดูภาพรวมของลูกค้าและมูลค่ารวม</li>
-                                <li>แถวสุดท้ายแสดงจำนวนลูกค้าทั้งหมดและมูลค่ารวมแยกตามประเภท</li>
-                                <li>ข้อมูลราคาแสดงเฉพาะบริการที่มีสถานะ "ใช้งาน" เท่านั้น</li>
-                            </ul>
-                        </div>
+                    <h3 class="text-2xl font-bold text-blue-600 mb-4">หน้าที่ 2: การแสดงข้อมูลหน้าการเพิ่มหมายเลขบริการ</h3>
+                    <p class="text-gray-700 text-xl font-bold mt-2">2.1.การแสดงข้อมูลหน้าการเพิ่มรายละเอียดบริการและการเลือกประเภทต่างๆ</p>
+                    <p class="text-gray-700 text-gl leading-relaxed">พนักงานสามารถเลือกประเภทบริการได้ดังนี้</p>
+                    <img src="../img/service_bill/SB3.png" alt="การเลือกประเภทบริการ" class="w-full rounded-lg border border-gray-200 mb-4">
+                    <p class="text-gray-700 text-gl leading-relaxed">พนักงานสามารถเลือกประเภทอุปกรณ์ได้ดังนี้</p>
+                    <img src="../img/service_bill/SB4.png" alt="การเลือกประเภทอุปกรณ์" class="w-full rounded-lg border border-gray-200 mb-4">
+                    <p class="text-gray-700 text-gl leading-relaxed">พนักงานสามารถเลือกสถานะได้ดังนี้</p>
+                    <img src="../img/service_bill/SB5.png" alt="การเลือกประเภทสถานะ" class="w-full rounded-lg border border-gray-200 mb-4">
+                    <p class="text-gray-700 text-gl leading-relaxed">พนักงานสามารถแก้ไขหมายเลขบริการผ่านไอคอนดินสอสีเหลือง</p>
+                    <img src="../img/service_bill/SB6.png" alt="การเลือกแก้ไขข้อมูลบริการ" class="w-full rounded-lg border border-gray-200 mb-4">
+                    <div class="prose max-w-none">
+                    <p class="text-gray-700 text-xl font-bold mt-2">2.2. การแสดงข้อมูลหน้าการเพิ่มอุปกรณ์</p>
+                    <p class="text-gray-700 text-gl leading-relaxed">พนักงานสามารถเพิ่มข้อมูลอุปกรณ์ จำนวนและวันที่ติดตั้งอุปกรณ์ในบิลที่เลือกไว้ได้</p>
+                    <img src="../img/service_bill/SB7.png" alt="การเพิ่มข้อมูลอุปกรณ์บิล" class="w-full rounded-lg border border-gray-200 mb-4">
                     </div>
-                    <p class="text-gray-700 text-xl font-bold mt-2">2.1. การกรองข้อมูล</p>
-                    <img src="../img/report/R1-2.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
-                    <div class="grid md:grid-cols-1 gap-4">
-                        <div class="bg-white p-4 rounded-lg border border-gray-200">
-                            <h4 class="font-semibold text-gray-800 mb-2">รายละเอียด :</h4>
-                            <ul class="list-disc pl-5 ">
-                                <li><strong>กรองตามประเภทลูกค้า : </strong>เลือกประเภทลูกค้าที่ต้องการข้อมูล</li>
-                                <li><strong>กรองตามอำเภอ : </strong>เลือกอำเภอที่ตั้งลูกค้าที่ต้องการข้อมูล</li>
-                                <li><strong>ปุ่มค้นหา : </strong>หลังจากเลือกตัวกรองเสร็จกดค้นหา เพื่อำการกรองข้อมูล</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 text-xl font-bold mt-2">2.2. การส่งออกข้อมูล</p>
-                    <p class="text-gray-700 text-gl leading-relaxed">หลังจากกรองข้อมูลต้องให้กดปุ่ม ดังรูปนี้</p>
-                    <img src="../img/report/R1-3.png" alt="การเพิ่มลูกค้า" class="w-1/2 rounded-lg border border-gray-200 mb-4">
-                    <p class="text-gray-700 text-gl leading-relaxed">จะได้ไฟล์ ดังรูปนี้</p>
-                    <img src="../img/report/R1-4.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
-                </div>
+                    <div class="prose max-w-none">
+                    <p class="text-gray-700 text-xl font-bold mt-2">2.3. การแสดงข้อมูลหน้าการสร้างกลุ่มอุปกรณ์</p>
+                    <p class="text-gray-700 text-gl leading-relaxed">พนักงานสามารถสร้างกลุ่มอุปกรณ์และจัดกลุ่มให้เป็นระเบียบได้ดังนี้</p>
+                    <img src="../img/service_bill/SB8.png" alt="การสร้างกลุ่มอุปกรณ์" class="w-full rounded-lg border border-gray-200 mb-4">
+                </div>  
             </div>
-            <!-- Page 3 -->
-            <div class="manual-page block" id="page3">
-                <div class="prose max-w-none">
-                    <h3 class="text-2xl font-bold text-blue-600 mb-4">หน้าที่ 3: รายงานที่ 2  ลูกค้าและหมายเลขบิลที่เกี่ยวข้อง</h3>
-                    <img src="../img/report/R2-1.png" alt="ภาพรวมระบบ" class="w-full rounded-lg border border-gray-200 mb-4">
-                    <div class="grid md:grid-cols-1 gap-4">
-                        <div class="bg-white p-4 rounded-lg border border-gray-200">
-                            <h4 class="font-semibold text-gray-800 mb-2">รายละเอียด :</h4>
-                            <ul class="list-disc pl-5 ">
-                                <li>แสดงรายละเอียดลูกค้าและบิลที่เกี่ยวข้องทั้งหมด</li>
-                                <li>แสดงข้อมูลประเภทบริการ รหัสบริการ และประเภทอุปกรณ์</li>
-                                <li>เหมาะสำหรับการดูรายละเอียดบิลของลูกค้าแต่ละราย</li>
-                                <li>รายงานมีการจัดกลุ่มตามลูกค้าและบิล</li>
-                                <li>บรรทัดแรกของแต่ละกลุ่มแสดงชื่อลูกค้าและข้อมูลบิลแรก</li>
-                                <li>บรรทัดถัดไปที่ว่างคอลัมน์ซ้ายหมายถึงเป็นบิล/บริการเพิ่มเติมของลูกค้าเดิม</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 text-xl font-bold mt-2">2.1. การกรองข้อมูล</p>
-                    <img src="../img/report/R2-2.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
-                    <div class="grid md:grid-cols-1 gap-4">
-                        <div class="bg-white p-4 rounded-lg border border-gray-200">
-                            <h4 class="font-semibold text-gray-800 mb-2">รายละเอียด :</h4>
-                            <ul class="list-disc pl-5 ">
-                                <li><strong>กรองตามประเภทลูกค้า : </strong>เลือกประเภทลูกค้าที่ต้องการข้อมูล</li>
-                                <li><strong>กรองตามอำเภอ : </strong>เลือกอำเภอที่ตั้งลูกค้าที่ต้องการข้อมูล</li>
-                                <li><strong>กรองตามประเภทบริการ : </strong>เลือกประเภทบริการที่ต้องการข้อมูล</li>
-                                <li><strong>กรองตามประเภทอุปกรณ์ : </strong>เลือกประเภทอุปกรณ์ที่ต้องการข้อมูล</li>
-                                <li><strong>ปุ่มค้นหา : </strong>หลังจากเลือกตัวกรองเสร็จกดค้นหา เพื่อำการกรองข้อมูล</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 text-xl font-bold mt-2">2.2. การส่งออกข้อมูล</p>
-                    <p class="text-gray-700 text-gl leading-relaxed">หลังจากกรองข้อมูลต้องให้กดปุ่ม ดังรูปนี้</p>
-                    <img src="../img/report/R1-3.png" alt="การเพิ่มลูกค้า" class="w-1/2 rounded-lg border border-gray-200 mb-4">
-                    <p class="text-gray-700 text-gl leading-relaxed">จะได้ไฟล์ ดังรูปนี้</p>
-                    <img src="../img/report/R1-4.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
-                </div>
-            </div>
-            <!-- Page 4 -->
-            <div class="manual-page block" id="page4">
-                <div class="prose max-w-none">
-                    <h3 class="text-2xl font-bold text-blue-600 mb-4">หน้าที่ 4: รายงานที่ 3  ลูกค้าและอุปกรณ์ที่เกี่ยวข้อง</h3>
-                    <img src="../img/report/R3-1.png" alt="ภาพรวมระบบ" class="w-full rounded-lg border border-gray-200 mb-4">
-                    <div class="grid md:grid-cols-1 gap-4">
-                        <div class="bg-white p-4 rounded-lg border border-gray-200">
-                            <h4 class="font-semibold text-gray-800 mb-2">รายละเอียด :</h4>
-                            <ul class="list-disc pl-5 ">
-                                <li>แสดงข้อมูลลูกค้าและอุปกรณ์ทั้งหมดที่เกี่ยวข้อง</li>
-                                <li>แสดงสถานะของอุปกรณ์และหมายเหตุ</li>
-                                <li>เหมาะสำหรับการตรวจสอบอุปกรณ์ที่ลูกค้าใช้งานอยู่</li>
-                                <li>รายงานแบ่งตามลูกค้าและแสดงอุปกรณ์ทั้งหมดที่เกี่ยวข้อง</li>
-                                <li>ข้อมูลสถานะอุปกรณ์จะช่วยให้ทราบว่าอุปกรณ์ยังใช้งานอยู่หรือไม่</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 text-xl font-bold mt-2">2.1. การกรองข้อมูล</p>
-                    <img src="../img/report/R3-2.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
-                    <div class="grid md:grid-cols-1 gap-4">
-                        <div class="bg-white p-4 rounded-lg border border-gray-200">
-                            <h4 class="font-semibold text-gray-800 mb-2">รายละเอียด :</h4>
-                            <ul class="list-disc pl-5 ">
-                                <li><strong>กรองตามประเภทลูกค้า : </strong>เลือกประเภทลูกค้าที่ต้องการข้อมูล</li>
-                                <li><strong>กรองตามอำเภอ : </strong>เลือกอำเภอที่ตั้งลูกค้าที่ต้องการข้อมูล</li>
-                                <li><strong>ปุ่มค้นหา : </strong>หลังจากเลือกตัวกรองเสร็จกดค้นหา เพื่อำการกรองข้อมูล</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 text-xl font-bold mt-2">2.2. การส่งออกข้อมูล</p>
-                    <p class="text-gray-700 text-gl leading-relaxed">หลังจากกรองข้อมูลต้องให้กดปุ่ม ดังรูปนี้</p>
-                    <img src="../img/report/R1-3.png" alt="การเพิ่มลูกค้า" class="w-1/2 rounded-lg border border-gray-200 mb-4">
-                    <p class="text-gray-700 text-gl leading-relaxed">จะได้ไฟล์ ดังรูปนี้</p>
-                    <img src="../img/report/R1-4.png" alt="การเพิ่มลูกค้า" class="w-full rounded-lg border border-gray-200 mb-4">
-                </div>
-            </div>
-        </div>
+</div>
+          
 
         <!-- Navigation -->
         <div class="border-t px-6 py-4 bg-gray-50">
