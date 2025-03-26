@@ -32,7 +32,7 @@
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="end_date">
                         วันที่สิ้นสุด
                     </label>
-                    <input type="date" name="end_date" id="end_date" required
+                    <input type="date" name="end_date" id="end_date" required min="<?= date('Y-m-d') ?>"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
 

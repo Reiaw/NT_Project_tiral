@@ -1,7 +1,30 @@
 <?php
 require_once '../config/config.php';
 require_once 'functions.php';
+function isCustomerTypeExists($type_customer, $exclude_id = null) {
+    global $conn; // Assuming you have a database connection variable
 
+    // Prepare the SQL query with case-insensitive comparison
+    $sql = "SELECT COUNT(*) FROM customer_types WHERE LOWER(TRIM(type_customer)) = LOWER(TRIM(?))";
+    $params = [$type_customer];
+
+    // If an ID is provided to exclude (for update scenario), add that to the query
+    if ($exclude_id !== null) {
+        $sql .= " AND id_customer_type != ?";
+        $params[] = $exclude_id;
+    }
+
+    // Prepare and execute the statement
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param(str_repeat('s', count($params)), ...$params);
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Return true if the customer type already exists
+    return $count > 0;
+}
 header('Content-Type: application/json');
 
 try {
@@ -13,7 +36,16 @@ try {
             if (empty($_POST['type_customer'])) {
                 throw new Exception('กรุณากรอกประเภทลูกค้า');
             }
-            if (createCustomerType($_POST['type_customer'])) {
+
+            // Trim and convert to lowercase for case-insensitive comparison
+            $type_customer = trim($_POST['type_customer']);
+
+            // Check for duplicate customer type (case-insensitive)
+            if (isCustomerTypeExists($type_customer)) {
+                throw new Exception('ประเภทลูกค้านี้มีอยู่ในระบบแล้ว');
+            }
+
+            if (createCustomerType($type_customer)) {
                 $response['success'] = true;
                 $response['message'] = 'เพิ่มประเภทลูกค้าสำเร็จ';
             } else {
@@ -26,14 +58,16 @@ try {
                 throw new Exception('กรุณากรอกข้อมูลให้ครบถ้วน');
             }
             
-            // Check if customer type has associated customers before update
-            $customerCount = getCustomerCountByType($_POST['id_customer_type']);
-            if ($customerCount > 0) {
-                $response['success'] = true;
-                $response['message'] = 'อัปเดตประเภทลูกค้าสำเร็จ';
+            // Trim and convert to lowercase for case-insensitive comparison
+            $type_customer = trim($_POST['type_customer']);
+            $id_customer_type = $_POST['id_customer_type'];
+
+            // Check for duplicate customer type, excluding the current ID
+            if (isCustomerTypeExists($type_customer, $id_customer_type)) {
+                throw new Exception('ประเภทลูกค้านี้มีอยู่ในระบบแล้ว');
             }
             
-            if (updateCustomerType($_POST['id_customer_type'], $_POST['type_customer'])) {
+            if (updateCustomerType($id_customer_type, $type_customer)) {
                 $response['success'] = true;
                 $response['message'] = 'อัปเดตประเภทลูกค้าสำเร็จ';
             } else {

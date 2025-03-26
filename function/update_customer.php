@@ -21,7 +21,7 @@ if (empty($name_customer) || empty($id_customer_type)  || empty($status_customer
 }
 
 // ตรวจสอบว่าเบอร์โทรศัพท์มีรูปแบบที่ถูกต้อง (สามารถใส่ชื่อได้)
-$phonePattern = '/^(\d{3}-\d{3}-\d{4}|\d{3}-\d{7}|\d{9,10})(\s[a-zA-Zก-๙0-9.]+)?$/u';
+$phonePattern = '/^(\d{3}-\d{3}-\d{4}|\d{3}-\d{7}|\d{9,10})(\s*(ต่อ|ext\.?)?\s*[a-zA-Zก-๙0-9.]+)?$/u';
 // ตรวจสอบว่ามีการกรอกเบอร์โทรศัพท์หรือไม่
 if (!empty($phone_customer)) {
     if (!preg_match($phonePattern, $phone_customer)) {
@@ -29,7 +29,9 @@ if (!empty($phone_customer)) {
         exit;
     }
 }
-
+$name_customer = $_GET['name_customer'] ?? '';
+$exists = checkCustomerName($name_customer);
+echo json_encode(['exists' => $exists]);
 // ตรวจสอบว่าชื่อลูกค้าไม่ซ้ำกันในฐานข้อมูล (เฉพาะเมื่อมีการเปลี่ยนชื่อ)
 $currentCustomer = getCustomerById($id_customer);
 if ($currentCustomer['name_customer'] !== $name_customer && checkCustomerName($name_customer)) {

@@ -68,6 +68,11 @@ if (isset($_POST['task_id'])) {
         $task = $task_result->fetch_assoc();
     }
 }
+$current_date = date('Y-m-d');
+$tasks = array_filter($tasks, function($task) use ($current_date) {
+    return strtotime($task['end_date']) >= strtotime($current_date);
+});
+
 $limit = 3;
 ?>
 <!DOCTYPE html>
@@ -179,8 +184,15 @@ $limit = 3;
                     </div>
                     <div class="space-y-4">
                         <?php if (!empty($tasks)): ?>
-                            <?php $page = $_GET['task_page'] ?? 1;
-                            $tasksToShow = array_slice($tasks, ($page - 1) * $limit, $limit);?>
+                            <?php 
+                            // Sort tasks by end_date in ascending order
+                            usort($tasks, function($a, $b) {
+                                return strtotime($a['end_date']) - strtotime($b['end_date']);
+                            });
+
+                            $page = $_GET['task_page'] ?? 1;
+                            $tasksToShow = array_slice($tasks, ($page - 1) * $limit, $limit);
+                            ?>
                             
                             <?php foreach ($tasksToShow as $veiwtask): ?>
                                 <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-yellow-400 hover:bg-gray-100 transition-colors">

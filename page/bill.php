@@ -34,10 +34,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // คำนวณวันที่สิ้นสุดสัญญาจากเดือน
         $end_date = date('Y-m-d', strtotime($create_at . " + $date_count months"));
+        $check_duplicate_sql = "SELECT COUNT(*) as count FROM bill_customer WHERE number_bill = ?";
+        $check_stmt = $conn->prepare($check_duplicate_sql);
+        $check_stmt->bind_param("s", $number_bill);
+        $check_stmt->execute();
+        $duplicate_result = $check_stmt->get_result()->fetch_assoc();
 
+        if ($duplicate_result['count'] > 0) {
+            // Duplicate bill number found
+            echo "<script>
+                alert('มีหมายเลขบิลนี้อยู่ในระบบแล้ว กรุณาใช้หมายเลขบิลอื่น');
+                window.location.href = 'bill.php';
+            </script>";
+            exit;
+        }
         // สร้างบิลใหม่
         $sql = "INSERT INTO bill_customer (id_customer, number_bill, type_bill, status_bill, create_at, update_at, date_count, end_date) 
-            VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)";
+        VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("issssss", $id_customer, $number_bill, $type_bill, $status_bill, $create_at, $date_count, $end_date);
         $stmt->execute();
@@ -60,7 +73,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // คำนวณวันที่สิ้นสุดสัญญาจากเดือน
         $end_date = date('Y-m-d', strtotime($create_at . " + $date_count months"));
+        $check_duplicate_sql = "SELECT COUNT(*) as count FROM bill_customer WHERE number_bill = ? AND id_bill != ?";
+        $check_stmt = $conn->prepare($check_duplicate_sql);
+        $check_stmt->bind_param("si", $number_bill, $id_bill);
+        $check_stmt->execute();
+        $duplicate_result = $check_stmt->get_result()->fetch_assoc();
 
+        if ($duplicate_result['count'] > 0) {
+            // Duplicate bill number found
+            echo "<script>
+                alert('มีหมายเลขบิลนี้อยู่ในระบบแล้ว กรุณาใช้หมายเลขบิลอื่น');
+                window.location.href = 'bill.php';
+            </script>";
+            exit;
+        }
         // อัปเดตข้อมูลบิล
         $sql = "UPDATE bill_customer SET id_customer = ?, number_bill = ?, type_bill = ?, 
                 status_bill = ?, create_at = ?, date_count = ?, end_date = ?, update_at = NOW() 

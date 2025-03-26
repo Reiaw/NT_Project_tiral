@@ -97,7 +97,7 @@ try {
         $id_tambons = $tambonMap[$tambon][$id_amphures];
 
         // ตรวจสอบเบอร์โทรศัพท์
-        if (!empty($phone) && !preg_match('/^(\d{3}-\d{3}-\d{4}|\d{3}-\d{7}|\d{9,10})(\s[a-zA-Zก-๙0-9.]+)?$/u', $phone)) {
+        if (!empty($phone) && !preg_match('/^(\d{3}-\d{3}-\d{4}|\d{3}-\d{7}|\d{9,10})(\s*(ต่อ|ext\.?)?\s*[a-zA-Zก-๙0-9.]+)?$/u', $phone)) {
             $conn->rollback();
             echo json_encode(['success' => false, 'message' => 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง']);
             exit;

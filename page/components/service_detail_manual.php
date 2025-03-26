@@ -140,28 +140,28 @@
                     <div class="grid md:grid-cols-1 gap-4">
                         <div class="bg-white p-4 rounded-lg border border-gray-200">
                             <h4 class="font-semibold text-gray-800 mb-2">รายละเอียดแสดงข้อมูล Product :</h4>
-                            <ul class="list-disc pl-5 ">
-                                <li><strong>ชื่อ Product</li>
-                                <li><strong>ข้อมูล Product</li>
-                                <li><strong>ราคา MainPackage</li>
-                                <li><strong>ราคา  ICT Solution (ถ้ามี)</li>
-                                <li><strong>รวม</li>
-                                <li><strong>รายละเอียด</li>
-                                <li><strong>วันที่เริ่ม</li>
+                            <ul class="list-disc pl-5">
+                                <li><strong>ชื่อ Product</strong></li>
+                                <li><strong>ข้อมูล Product</strong></li>
+                                <li><strong>ราคา MainPackage</strong></li>
+                                <li><strong>ราคา ICT Solution (ถ้ามี)</strong></li>
+                                <li><strong>รวม</strong></li>
+                                <li><strong>รายละเอียด</strong></li>
+                                <li><strong>วันที่เริ่ม</strong></li>
                             </ul>
                         </div>
-                    <p class="text-gray-700 text-xl font-bold mt-2">2.3. การแก้ไขข้อมูล Product คลิกที่ปุ่ม Edit</p>
-                    <p class="text-gray-700 text-gl leading-relaxed">เมื่อกดปุ่มนี้จะสามารถแก้ไขละเอียดของ Product ในฟอร์มที่แสดงขึ้นและคลิกปุ่ม "บันทึก" เพื่อบันทึกการเปลี่ยนแปลง </p>
-                    <img src="../img/service_detail/SD1.7.png" alt="การแสดงข้อมูล"class="w-1/2 mx-auto rounded-lg border border-gray-200 mb-4">
-                    <p class="text-gray-700 text-gl leading-relaxed">ดังรูปนี้</p>
-                    <img src="../img/service_detail/SD1.8.png" alt="การแสดงข้อมูล"class="w-full rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-xl font-bold mt-2">2.3. การแก้ไขข้อมูล Product คลิกที่ปุ่ม Edit</p>
+                        <p class="text-gray-700 text-gl leading-relaxed">เมื่อกดปุ่มนี้จะสามารถแก้ไขละเอียดของ Product ในฟอร์มที่แสดงขึ้นและคลิกปุ่ม "บันทึก" เพื่อบันทึกการเปลี่ยนแปลง </p>
+                        <img src="../img/service_detail/SD1.7.png" alt="การแสดงข้อมูล"class="w-1/2 mx-auto rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-gl leading-relaxed">ดังรูปนี้</p>
+                        <img src="../img/service_detail/SD1.8.png" alt="การแสดงข้อมูล"class="w-full rounded-lg border border-gray-200 mb-4">
 
-                    <p class="text-gray-700 text-xl font-bold mt-2">2.4. การลบข้อมูล Product คลิกที่ปุ่ม Delete</p>
-                    <p class="text-gray-700 text-gl leading-relaxed">เมื่อกดปุ่มนี้จะสามารถลบละเอียดของ Product และยืนยันการลบข้อมูลในกล่องข้อความที่ปรากฏ </p>
-                    <img src="../img/service_detail/SD1.9.png" alt="การแสดงข้อมูล"class="w-1/2 mx-auto rounded-lg border border-gray-200 mb-4">
-                    <p class="text-gray-700 text-gl leading-relaxed">ดังรูปนี้</p>
-                    <img src="../img/service_detail/SD2.0.png" alt="การแสดงข้อมูล"class="w-full rounded-lg border border-gray-200 mb-4">
-                    </div>
+                        <p class="text-gray-700 text-xl font-bold mt-2">2.4. การลบข้อมูล Product คลิกที่ปุ่ม Delete</p>
+                        <p class="text-gray-700 text-gl leading-relaxed">เมื่อกดปุ่มนี้จะสามารถลบละเอียดของ Product และยืนยันการลบข้อมูลในกล่องข้อความที่ปรากฏ </p>
+                        <img src="../img/service_detail/SD1.9.png" alt="การแสดงข้อมูล"class="w-1/2 mx-auto rounded-lg border border-gray-200 mb-4">
+                        <p class="text-gray-700 text-gl leading-relaxed">ดังรูปนี้</p>
+                        <img src="../img/service_detail/SD2.0.png" alt="การแสดงข้อมูล"class="w-full rounded-lg border border-gray-200 mb-4">
+                        </div>
                     <div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
                             <h4 class="text-lg font-bold text-yellow-700 flex items-center">
                                     <svg class="w-6 h-6 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">

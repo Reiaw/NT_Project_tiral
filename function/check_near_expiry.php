@@ -14,6 +14,7 @@ if (!$user_id) {
 
 $result = checkNearExpiry($conn, $user_id);
 echo json_encode($result);
+
 function checkNearExpiry($conn, $user_id) {
     try {
         // Delete old notifications
@@ -21,22 +22,37 @@ function checkNearExpiry($conn, $user_id) {
         $stmt_delete_old = $conn->prepare($sql_delete_old);
         $stmt_delete_old->execute();
 
-         // Delete notifications for expired contracts (end date is in the past)
-         $sql_delete_expired = "DELETE n FROM notifications n 
-                INNER JOIN bill_customer bc ON n.id_bill = bc.id_bill
-                WHERE bc.end_date < CURDATE() 
-                AND n.id_user = ?";
-        $stmt_delete_expired = $conn->prepare($sql_delete_expired);
-        $stmt_delete_expired->bind_param("i", $user_id);
-        $stmt_delete_expired->execute();
+        // Delete notifications for contracts with specific status changes
+        $sql_delete_notifications = "
+            DELETE n FROM notifications n
+            INNER JOIN bill_customer bc ON n.id_bill = bc.id_bill
+            WHERE (
+                bc.end_date < CURDATE() OR 
+                bc.contact_status = 'ยกเลิกสัญญา' OR 
+                bc.status_bill = 'ยกเลิกใช้งาน'
+            ) AND n.id_user = ?";
+        $stmt_delete_notifications = $conn->prepare($sql_delete_notifications);
+        $stmt_delete_notifications->bind_param("i", $user_id);
+        $stmt_delete_notifications->execute();
 
         // Update expired bills to inactive status
         $sql_update_expired = "UPDATE bill_customer 
-                              SET status_bill = 'ยกเลิกใช้งาน' 
+                              SET status_bill = 'ยกเลิกใช้งาน', 
+                                  contact_status = 'หมดอายุสัญญา'
                               WHERE end_date < CURDATE() 
                               AND status_bill = 'ใช้งาน'";
         $stmt_update_expired = $conn->prepare($sql_update_expired);
         $stmt_update_expired->execute();
+
+        // Delete notifications for renewed contracts
+        $sql_delete_renewed = "
+            DELETE n FROM notifications n
+            INNER JOIN bill_customer bc ON n.id_bill = bc.id_bill
+            WHERE bc.contact_status = 'ต่อสัญญา' AND n.id_user = ?";
+        $stmt_delete_renewed = $conn->prepare($sql_delete_renewed);
+        $stmt_delete_renewed->bind_param("i", $user_id);
+        $stmt_delete_renewed->execute();
+
         // Get near expiry contracts
         $sql = "SELECT COUNT(*) as near_expiry_count
                 FROM bill_customer bc
